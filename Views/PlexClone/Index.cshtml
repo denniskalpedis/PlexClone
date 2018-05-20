@@ -1,0 +1,14 @@
+<h1>PlexClone</h1>
+@foreach(var drive in @ViewBag.drives)
+{
+    <a href="/@drive.Name">@drive.Name.Replace('\\','/')</a> <br>
+}
+@if(@ViewBag.current != null)
+{
+    @ViewBag.path <br>
+    <a href="/@ViewBag.path">..</a> <br>
+    @foreach(var dir in @ViewBag.current)
+    {
+        <a href="/@dir.Replace('/','\\').Replace('\\', '!')">@dir.Replace('\\','/')</a> <br>
+    }
+}
