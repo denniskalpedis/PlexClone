@@ -14,6 +14,8 @@ namespace PlexClone.Controllers{
 	// [Route("/PlexClone")]
     public class PlexCloneController:Controller{
         DriveInfo[] allDrives = DriveInfo.GetDrives();
+        List<string> directories = new List<string>();
+        
     	private PlexCloneContext _context;
 
     	public PlexCloneController(PlexCloneContext context){
@@ -24,26 +26,49 @@ namespace PlexClone.Controllers{
         [Route("")]
         public IActionResult Index(){
             ViewBag.drives = allDrives;
+            System.Console.WriteLine(allDrives[0].ToString());
             return View("Index");
         }
 
         [HttpGet]
         [Route("/{path}")]
-        public IActionResult GetDir(string path){
-            path = path.TrimEnd('!').Replace("!","/");
-            System.Console.WriteLine(path);
+        public IActionResult GetDir(int path){
+            // path = path.TrimEnd('!').Replace("!","/");
+            // System.Console.WriteLine(path);
             // path = path.Substring(0, path.LastIndexOf('/') + 1);
-            List<string> directories = new List<string>();
-            directories = Directory.GetDirectories(path+@"\").ToList();
+            
+            directories = Directory.GetDirectories(allDrives[path].ToString()).ToList();
             directories.Sort();
             ViewBag.drives = allDrives;
             ViewBag.current = directories;
-            path = path.Replace('/', '!');
-            if (path.Contains("!")){
-                ViewBag.path = path.Substring(0, path.LastIndexOf('!') + 1);
-            } else{
-                ViewBag.path = path;
-            }
+            // path = path.Replace('/', '!');
+            // if (path.Contains("!")){
+            //     ViewBag.path = path.Substring(0, path.LastIndexOf('!') + 1);
+            // } else{
+            //     ViewBag.path = path;
+            // }
+            return View("Index");
+        }
+
+        [HttpGet]
+        [Route("path/{path}")]
+        public IActionResult GetNextDir(int path){
+            // path = path.TrimEnd('!').Replace("!","/");
+            // System.Console.WriteLine(path);
+            // path = path.Substring(0, path.LastIndexOf('/') + 1);
+            // List<string> directories = new List<string>();
+            // ViewBag.currentdir = directories[path];
+            System.Console.WriteLine(directories.Count());
+            directories = Directory.GetDirectories(directories[path].ToString()).ToList();
+            directories.Sort();
+            ViewBag.drives = allDrives;
+            ViewBag.current = directories;
+            // path = path.Replace('/', '!');
+            // if (path.Contains("!")){
+            //     ViewBag.path = path.Substring(0, path.LastIndexOf('!') + 1);
+            // } else{
+            //     ViewBag.path = path;
+            // }
             return View("Index");
         }
     }
