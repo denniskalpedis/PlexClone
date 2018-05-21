@@ -233,4 +233,4 @@ Thumbs.db
 .Trashes
 
 #ignore javascript build files
-#node_modules
+node_modules
