@@ -13,10 +13,15 @@ using System.Web;
 namespace PlexClone.Controllers{
 	// [Route("/PlexClone")]
     public class PlexCloneController:Controller{
+        // public static readonly IList<string> moviefiletype = new IReadOnlyCollection<string>(newList<string> {"m4v", "webm"});
+        // const static List<string> moviefiletypes = new List<string>(new string[] {"m4v", "webm", "mkv", "avi", "mov", "wmv", "mp4", "m4p", "mpg"});
         DriveInfo[] allDrives = DriveInfo.GetDrives();
         List<string> directories = new List<string>();
         
     	private PlexCloneContext _context;
+        public static List<string> moviefiletypes{
+            get{ return new List<string> {".m4v", ".webm", ".mkv", ".avi", ".mov", ".wmv", ".mp4", ".m4p", ".mpg"}; }
+        }
 
     	public PlexCloneController(PlexCloneContext context){
     		_context = context;
@@ -70,6 +75,26 @@ namespace PlexClone.Controllers{
             //     ViewBag.path = path;
             // }
             return View("Index");
+        }
+        [HttpGet]
+        [Route("AddLibrary")]
+        public IActionResult AddLibrary(){
+            return View();
+        }
+        [HttpPost]
+        [Route("AddLibrary")]
+        public IActionResult AddNewLibrary(Libraries model){
+            if (!Directory.Exists(model.Folder)){
+                ModelState.AddModelError("Folder", "Path does not exist or you don't have permission.");
+                return View("AddLibrary");
+            }
+            // IEnumerable<FileInfo> allfiles = model.Folder.EnumerateFiles();
+            List<string> allfiles = Directory.GetFiles(model.Folder, "*.*", SearchOption.AllDirectories).ToList();
+            allfiles = allfiles.Where(f => moviefiletypes.Contains(Path.GetExtension(f))).ToList();
+            foreach(var file in allfiles){
+                System.Console.WriteLine(file);
+            }
+            return RedirectToAction("");
         }
     }
     // public partial class _Directory : System.Web.UI.Page

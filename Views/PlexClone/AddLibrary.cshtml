@@ -1,0 +1,16 @@
+@model PlexClone.Models.Libraries
+<form action="AddLibrary" method="POST">
+    Name: <br>
+    <input type="text" name="Name"> <br>
+    <span asp-validation-for="Folder"></span> <br>
+    Path: <br>
+    <input type="text" name="Folder"> <br>
+    Type: <br>
+    <select name="Type">
+        <option value="Movies">Movies</option>
+        <option value="Pictures">Pictures</option>
+        <option value="TVShows">TVShows</option>
+    </select>
+
+    <input type="submit" name="" id="" value="Add">
+</form>
