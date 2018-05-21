@@ -1,0 +1,70 @@
+$gray: #111A1D;
+$grey2: #4B5255;
+$lightGray: #666A86;
+$brightBlue: #009DCF;
+$green: #448FA3;
+$blue: #95B8d1;
+
+body{
+    width: 100%;
+    min-width: 1000px;
+    margin: 0;
+}
+.header{
+    width: 100%;
+    background-color: $gray;
+    padding: 10px;
+    height: 10vh;
+    img{
+        width: 50px;
+        height: auto;
+        display: inline-block;
+        margin-right: 30px;
+    }
+    .search{
+        display: inline-block;
+        padding: 5px;
+        background-color: $grey2;
+        border-radius: 5px;
+        vertical-align: top;
+        margin-top: 10px;
+        img{
+            width: 25px;
+            height: auto;
+            margin-right: 5px;
+        }
+        form{
+            display: inline-block;
+        }
+        input{
+            background-color: $grey2;
+            border: 0px;
+            border-style: none;
+            width: 250px;
+        }
+        input:focus{
+            outline: none !important;
+        }
+        .SubmitButton{
+            display: none;
+        }
+    }
+}
+.leftNav{
+    display: inline-block;
+    width: 20%;
+    min-width: 290px;
+    padding: 2%;
+    background-color: $lightGray;
+    height: 90vh;
+    vertical-align: top;
+    color: $blue;
+}
+.body{
+    width: 74%;
+    display: inline-block;
+    overflow: scroll;
+    height: 90vh;
+    vertical-align: top;
+    background-color: $grey2;
+}
