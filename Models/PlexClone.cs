@@ -5,6 +5,50 @@ namespace PlexClone.Models{
 	public class PlexClone:BaseEntity{
 	
 	}
+	
+	public class Libraries:BaseEntity{
+		public string Name{get;set;}
+		public string Type{get;set;}
+		public string Folder{get;set;}
+		public List<File> Files{get;set;}
+		public Libraries(){
+			Files = new List<File>();
+		}
+	}
+
+	public class File:BaseEntity{
+		public int Moviesid{get;set;}
+		public Movies Movie{get;set;}
+		public int Libraryid{get;set;}
+		public Libraries Library{get;set;}
+
+	}
+
+	public class Movies:BaseEntity{
+		public string Title{get;set;}
+		public int Year{get;set;}
+		public int Runtime{get;set;}
+		public string RottenTomatoesRating{get;set;}
+		public string IMDBRating{get;set;}
+		public string Poster{get;set;}
+		public string Plot{get;set;}
+		public string Rating{get;set;}//movie rating I.E. R, G, PG-13
+		public string Actors{get;set;}
+		public string genre{get;set;}
+		public List<File> MovieFiles{get;set;}
+
+		public Movies(){
+			MovieFiles = new List<File>();
+		}
+
+	}
+
+	public class FileTypes:BaseEntity{
+		public List<string> MoviesFileTypes{get;set;}
+		public FileTypes(){
+			MoviesFileTypes = new List<string>(new string[] {"m4v", "webm", "mkv", "avi", "mov", "wmv", "mp4", "m4p", "mpg"});
+		}
+	}
 /*
 	Useful Annotations and Examples:
 
