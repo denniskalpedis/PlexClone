@@ -1,6 +1,6 @@
 body {
   width: 100%;
-  min-width: 1000px;
+  min-width: 1200px;
   margin: 0;
 }
 
@@ -9,6 +9,7 @@ body {
   background-color: #111A1D;
   padding: 10px;
   height: 10vh;
+  min-height: 73px;
 }
 .header img {
   width: 50px;
@@ -51,18 +52,75 @@ body {
   min-width: 290px;
   padding: 2%;
   background-color: #666A86;
-  height: 90vh;
+  height: 100%;
   vertical-align: top;
   color: #95B8d1;
 }
+.leftNav h5 {
+  display: inline-block;
+  margin-right: 5px;
+}
+.leftNav img {
+  width: 20px;
+  height: auto;
+  display: inline-block;
+  vertical-align: top;
+  margin-top: 2px;
+}
 
 .body {
-  width: 74%;
+  width: 75%;
   display: inline-block;
   overflow: scroll;
-  height: 90vh;
+  height: 100%;
   vertical-align: top;
+}
+
+.bodyContainer {
+  width: 100%;
   background-color: #4B5255;
+  height: 90vh;
+  min-height: 658px;
+}
+
+.formPopup {
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 100vh;
+  width: 100%;
+  background-color: rgba(12, 27, 30, 0.6);
+  display: none;
+}
+
+.libraryForm {
+  width: 27.5%;
+  padding: 2.5%;
+  margin: auto;
+  background-color: #448FA3;
+  height: 45vh;
+  margin-top: 27.5vh;
+  border-radius: 5px;
+}
+.libraryForm label {
+  width: 60px;
+}
+.libraryForm input {
+  margin-top: 20px;
+}
+.libraryForm select {
+  margin-top: 20px;
+}
+.libraryForm .submitButton {
+  margin-left: 185px;
+}
+
+.closeForm {
+  position: absolute;
+  color: #95B8d1;
+  font-size: 40px;
+  top: 183px;
+  right: 403px;
 }
 
 /*# sourceMappingURL=wwwroot/css/styles.css.map */
