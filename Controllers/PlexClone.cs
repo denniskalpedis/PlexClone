@@ -113,7 +113,8 @@ namespace PlexClone.Controllers{
                 if(idx != -1){
                     System.Console.WriteLine("Movie Name is " + temp.Substring(0, idx));
                     System.Console.WriteLine("Year is " + temp.Substring(idx+3));
-                    var movieresults = OMDBapiCall(temp.Substring(0,idx), temp.Substring(idx+3), _configuration["apikey"]);
+                    System.Console.WriteLine(_configuration["apikey"]);
+                    Movies movieresults = OMDBapiCall(temp.Substring(0,idx).Replace(" ", "+"), temp.Substring(idx+3), _configuration["apikey"]);
                     System.Console.WriteLine(movieresults);
                     //search API "http://www.omdbapi.com/?t=temp.Substring(0,idx)&y=temp.Substring(idx+3)&plot=full&apikey=" + apikey
                 } else {
@@ -121,7 +122,7 @@ namespace PlexClone.Controllers{
                 }
                 
             }
-            return RedirectToAction("");
+            return RedirectToAction("AddLibrary");
         }
 
         public async static Task<Movies> OMDBapiCall(string movie, string year, string api)
