@@ -7,15 +7,23 @@
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
     <link rel="stylesheet" type="text/css" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.1/css/bootstrap.min.css">
     <script type="text/javascript" src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.1/js/bootstrap.min.js"></script>
-
-    <link rel="stylesheet" type="text/css" href="~/css/style.css">
+    <link rel="stylesheet" type="text/css" href="~/css/styles.css">
     <script type="text/javascript" src="~/js/main.js"></script>
 </head>
 <body>
     <div class="header">
-
+        <a href="/"><img src="~/Img/house.jpg" alt="Home icon."></a>
+        <div class="search">
+            <img src="~/Img/search.png" alt="Magnifying glass icon.">
+            <form action="">
+                <input type="text" name="search">
+                <input class="SubmitButton" type="Submit">
+            </form>
+        </div>
     </div>
-
+    <div class="leftNav">
+        <h5>LIBRARIES</h5>
+    </div>
     <div class="body">
         <!-- Your View will be rendered in place of RenderBody -->
         @RenderBody()
