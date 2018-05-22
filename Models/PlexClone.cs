@@ -10,8 +10,7 @@ namespace PlexClone.Models{
 		public string Name{get;set;}
 		public string Type{get;set;}
 		public string Folder{get;set;}
-		public int FileTypes{get;set;}
-		public FileTypes filetype{get;set;}
+
 		public List<File> Files{get;set;}
 		public Libraries(){
 			Files = new List<File>();
@@ -20,9 +19,7 @@ namespace PlexClone.Models{
 
 	public class File:BaseEntity{
 		public string Path{get;set;}
-		public int Moviesid{get;set;}
 		public Movies Movie{get;set;}
-		public int Libraryid{get;set;}
 		public Libraries Library{get;set;}
 
 	}
@@ -46,12 +43,7 @@ namespace PlexClone.Models{
 
 	}
 
-	public class FileTypes:BaseEntity{
-		public List<string> MoviesFileTypes{get;set;}
-		public FileTypes(){
-			MoviesFileTypes = new List<string>(new string[] {"m4v", "webm", "mkv", "avi", "mov", "wmv", "mp4", "m4p", "mpg"});
-		}
-	}
+	
 /*
 	Useful Annotations and Examples:
 
