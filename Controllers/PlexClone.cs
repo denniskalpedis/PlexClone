@@ -105,7 +105,7 @@ namespace PlexClone.Controllers{
                 if(idx != -1){
                     System.Console.WriteLine("Movie Name is " + temp.Substring(0, idx));
                     System.Console.WriteLine("Year is " + temp.Substring(idx+3));
-                    //search API http://www.omdbapi.com/?t=temp.Substring(0, idx)&y=temp.Substring(idx+3)&plot=full&apikey=835cdf70
+                    //search API http://www.omdbapi.com/?t=temp.Substring(0,idx)&y=temp.Substring(idx+3)&plot=full&apikey=???
                 } else {
                     System.Console.WriteLine("Naming not matching");
                 }
