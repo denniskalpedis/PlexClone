@@ -8,7 +8,7 @@ using System;
 using System.IO;
 using System.Collections.Generic;
 using System.Web;
-
+using System.Diagnostics;
 
 namespace PlexClone.Controllers{
 	// [Route("/PlexClone")]
@@ -79,6 +79,8 @@ namespace PlexClone.Controllers{
         [HttpGet]
         [Route("AddLibrary")]
         public IActionResult AddLibrary(){
+
+        
             return View();
         }
         [HttpPost]
@@ -95,6 +97,7 @@ namespace PlexClone.Controllers{
             System.Console.WriteLine(allfiles.Count);
             foreach(var file in allfiles){
                 //Add file to DB
+                GetVideoInfo(file);
                 System.Console.WriteLine(file);
                 FileInfo finfo = new FileInfo(file);
                 string temp = finfo.Directory.Name;
@@ -108,7 +111,70 @@ namespace PlexClone.Controllers{
                 }
                 
             }
-            return RedirectToAction("");
+            return RedirectToAction("AddLibrary");
+        }
+
+        private static void GetVideoInfo(string file){
+            // System.Console.WriteLine(Directory.GetCurrentDirectory() + Path.DirectorySeparatorChar + "bin" + Path.DirectorySeparatorChar + "ffprobe.exe");
+            OperatingSystem os = Environment.OSVersion;
+            PlatformID pid = os.Platform;
+            string ffprobeName = "";
+            switch (pid) 
+                {
+                case PlatformID.Win32NT:
+                case PlatformID.Win32S:
+                case PlatformID.Win32Windows:
+                case PlatformID.WinCE:
+                    if (System.IO.File.Exists(Directory.GetCurrentDirectory() + Path.DirectorySeparatorChar + "bin" + Path.DirectorySeparatorChar + "ffprobe.exe")){
+                        System.Console.WriteLine("ffprobe installed!");
+                        ffprobeName = "ffprobe.exe";
+                    } else {
+                        System.Console.WriteLine("You need ffprobe!");
+                        return;
+                    }
+                    break;
+                case PlatformID.Unix:
+                    if (System.IO.File.Exists(Directory.GetCurrentDirectory() + Path.DirectorySeparatorChar + "bin" + Path.DirectorySeparatorChar + "ffprobe")){
+                        System.Console.WriteLine("ffprobe installed!");
+                        ffprobeName = "ffprobe";
+                    } else {
+                        System.Console.WriteLine("You need ffprobe!");
+                        return;
+                    }
+                    break;
+                case PlatformID.MacOSX:
+                    if (System.IO.File.Exists(Directory.GetCurrentDirectory() + Path.DirectorySeparatorChar + "bin" + Path.DirectorySeparatorChar + "ffprobe")){
+                        System.Console.WriteLine("ffprobe installed!");
+                        ffprobeName = "ffprobe";
+                    } else {
+                        System.Console.WriteLine("You need ffprobe!");
+                        return;
+                    }
+                    break;
+                default:
+                    Console.WriteLine("Don't know your OS!");
+                    return;
+                }
+            string basePath = Directory.GetCurrentDirectory() + Path.DirectorySeparatorChar + "bin" + Path.DirectorySeparatorChar + ffprobeName;
+            string filePath = file;
+            string cmd = string.Format(" -v quiet -print_format json -show_format -show_streams {0}", filePath);
+            Process proc = new Process();
+            proc.StartInfo.FileName = basePath;
+            proc.StartInfo.Arguments = cmd;
+            proc.StartInfo.CreateNoWindow = true;
+            proc.StartInfo.RedirectStandardOutput = true;
+            proc.StartInfo.RedirectStandardError = true;
+            proc.StartInfo.UseShellExecute = false;
+            proc.StartInfo.UseShellExecute = false;
+            if (!proc.Start())
+            {
+                Console.WriteLine("Error starting");
+                return;
+            }
+            string info = proc.StandardOutput.ReadToEnd();
+            proc.WaitForExit();
+            proc.Close();
+            
         }
     }
     // public partial class _Directory : System.Web.UI.Page
