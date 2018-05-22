@@ -157,7 +157,8 @@ namespace PlexClone.Controllers{
                 }
             string basePath = Directory.GetCurrentDirectory() + Path.DirectorySeparatorChar + "bin" + Path.DirectorySeparatorChar + ffprobeName;
             string filePath = file;
-            string cmd = string.Format(" -v quiet -print_format json -show_format -show_streams {0}", filePath);
+            string cmd = string.Format(" -v quiet -print_format json -show_format -show_streams  \"{0}\"", filePath);
+            System.Console.WriteLine(basePath + cmd);
             Process proc = new Process();
             proc.StartInfo.FileName = basePath;
             proc.StartInfo.Arguments = cmd;
@@ -172,9 +173,10 @@ namespace PlexClone.Controllers{
                 return;
             }
             string info = proc.StandardOutput.ReadToEnd();
+            System.Console.WriteLine(info);
             proc.WaitForExit();
             proc.Close();
-            
+
         }
     }
     // public partial class _Directory : System.Web.UI.Page
