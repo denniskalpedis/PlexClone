@@ -91,7 +91,7 @@ namespace PlexClone.Controllers{
                 return View("AddLibrary");
             }
             // IEnumerable<FileInfo> allfiles = model.Folder.EnumerateFiles();
-            // add folder to DB
+            
             List<string> allfiles = Directory.GetFiles(model.Folder, "*.*", SearchOption.AllDirectories).ToList();
             allfiles = allfiles.Where(f => moviefiletypes.Contains(Path.GetExtension(f))).ToList();
             System.Console.WriteLine(allfiles.Count);
