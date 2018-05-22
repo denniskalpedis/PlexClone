@@ -1,0 +1,24 @@
+{
+  "name": "PlexClone",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/denniskalpedis/PlexClone.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/denniskalpedis/PlexClone/issues"
+  },
+  "homepage": "https://github.com/denniskalpedis/PlexClone#readme",
+  "dependencies": {},
+  "devDependencies": {
+    "sass": "^1.3.2"
+  }
+}

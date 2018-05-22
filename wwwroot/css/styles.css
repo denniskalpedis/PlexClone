@@ -1,0 +1,68 @@
+body {
+  width: 100%;
+  min-width: 1000px;
+  margin: 0;
+}
+
+.header {
+  width: 100%;
+  background-color: #111A1D;
+  padding: 10px;
+  height: 10vh;
+}
+.header img {
+  width: 50px;
+  height: auto;
+  display: inline-block;
+  margin-right: 30px;
+}
+.header .search {
+  display: inline-block;
+  padding: 5px;
+  background-color: #4B5255;
+  border-radius: 5px;
+  vertical-align: top;
+  margin-top: 10px;
+}
+.header .search img {
+  width: 25px;
+  height: auto;
+  margin-right: 5px;
+}
+.header .search form {
+  display: inline-block;
+}
+.header .search input {
+  background-color: #4B5255;
+  border: 0px;
+  border-style: none;
+  width: 250px;
+}
+.header .search input:focus {
+  outline: none !important;
+}
+.header .search .SubmitButton {
+  display: none;
+}
+
+.leftNav {
+  display: inline-block;
+  width: 20%;
+  min-width: 290px;
+  padding: 2%;
+  background-color: #666A86;
+  height: 90vh;
+  vertical-align: top;
+  color: #95B8d1;
+}
+
+.body {
+  width: 74%;
+  display: inline-block;
+  overflow: scroll;
+  height: 90vh;
+  vertical-align: top;
+  background-color: #4B5255;
+}
+
+/*# sourceMappingURL=wwwroot/css/styles.css.map */
