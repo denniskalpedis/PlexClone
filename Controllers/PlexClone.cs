@@ -1,6 +1,7 @@
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
 using Microsoft.AspNetCore.Identity;
 using System.Linq;
 using PlexClone.Models;
@@ -8,7 +9,11 @@ using System;
 using System.IO;
 using System.Collections.Generic;
 using System.Web;
-
+using System.Diagnostics;
+using System.Net.Http;
+using System.Threading.Tasks;
+using System.Runtime.Serialization.Json;
+using System.Text;
 
 namespace PlexClone.Controllers{
 	// [Route("/PlexClone")]
@@ -17,15 +22,24 @@ namespace PlexClone.Controllers{
         // const static List<string> moviefiletypes = new List<string>(new string[] {"m4v", "webm", "mkv", "avi", "mov", "wmv", "mp4", "m4p", "mpg"});
         DriveInfo[] allDrives = DriveInfo.GetDrives();
         List<string> directories = new List<string>();
+        private static readonly HttpClient _httpClient = new HttpClient();
         
     	private PlexCloneContext _context;
         public static List<string> moviefiletypes{
             get{ return new List<string> {".m4v", ".webm", ".mkv", ".avi", ".mov", ".wmv", ".mp4", ".m4p", ".mpg"}; }
         }
 
-    	public PlexCloneController(PlexCloneContext context){
-    		_context = context;
-    	}
+        private IConfiguration _configuration;
+ 
+        public PlexCloneController(IConfiguration Configuration, PlexCloneContext context)
+        {
+            _configuration = Configuration;
+            _context = context;
+        }
+
+    	// public PlexCloneController(PlexCloneContext context){
+    		
+    	// }
 
         [HttpGet]
         [Route("")]
@@ -93,12 +107,45 @@ namespace PlexClone.Controllers{
             allfiles = allfiles.Where(f => moviefiletypes.Contains(Path.GetExtension(f))).ToList();
             foreach(var file in allfiles){
                 System.Console.WriteLine(file);
+                FileInfo finfo = new FileInfo(file);
+                string temp = finfo.Directory.Name;
+                int idx = temp.LastIndexOf(" - ");
+                if(idx != -1){
+                    System.Console.WriteLine("Movie Name is " + temp.Substring(0, idx));
+                    System.Console.WriteLine("Year is " + temp.Substring(idx+3));
+                    var movieresults = OMDBapiCall(temp.Substring(0,idx), temp.Substring(idx+3), _configuration["apikey"]);
+                    System.Console.WriteLine(movieresults);
+                    //search API "http://www.omdbapi.com/?t=temp.Substring(0,idx)&y=temp.Substring(idx+3)&plot=full&apikey=" + apikey
+                } else {
+                    System.Console.WriteLine("Naming not matching");
+                }
+                
             }
             return RedirectToAction("");
         }
-    }
+
+        public async static Task<Movies> OMDBapiCall(string movie, string year, string api)
+        {
+            try
+            {
+                string url = String.Format("http://www.omdbapi.com/?t=", movie, "&y=", year, "&plot=full&apikey=", api);
+                var response = _httpClient.GetAsync(url).Result;
+                var result = await response.Content.ReadAsStringAsync();
+                var serializer = new DataContractJsonSerializer(typeof(Movies));
+                var ms = new MemoryStream(Encoding.UTF8.GetBytes(result));
+                var data = (Movies)serializer.ReadObject(ms);
+
+                return data;
+            }
+            catch (Exception exception)
+            {
+                Console.WriteLine(exception);
+                return null;
+            }
+        }
     // public partial class _Directory : System.Web.UI.Page
     // {
 
     // }
+    }
 }

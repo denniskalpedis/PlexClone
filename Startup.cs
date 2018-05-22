@@ -27,6 +27,7 @@ namespace PlexClone{
             services.AddSession();
             services.AddMvc();
             services.AddDbContext<PlexCloneContext>(options => options.UseMySql(Configuration["DBInfo:ConnectionString"]));
+            services.AddSingleton<IConfiguration>(Configuration);
         }
 
         public void Configure(IApplicationBuilder app, IHostingEnvironment env,ILoggerFactory loggerFactory){
