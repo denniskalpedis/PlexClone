@@ -71,13 +71,15 @@ namespace PlexClone.Controllers{
         [HttpGet]
         [Route("/{libraryid}")]
         public IActionResult LoadLibrary(int libraryid){
-            ViewBag.Movies = _context.Movies;
+            ViewBag.Libraries = _context.Libraries;
+            ViewBag.Movies = _context.Movies.Include(f => f.MovieFiles);
             return View("Library");
         }
 
         [HttpGet]
         [Route("/movie/{movieid}")]
         public IActionResult LoadMovie(int movieid){
+            ViewBag.Libraries = _context.Libraries;
             ViewBag.Movie = _context.Movies.SingleOrDefault(m => m.id == movieid);
             return View("Movie");
         }
