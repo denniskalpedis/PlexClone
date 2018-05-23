@@ -2,12 +2,14 @@
 {
     @foreach (var version in @ViewBag.Movie.MovieFiles)
     {
-        @version.Quality
+        @version.Quality<br>
+        @version.Path<br>
+        @version.CodecName<br>
     }
     <a href="">
         <div class="d-inline-block">
             <img src="@ViewBag.Movie.Poster" alt="@ViewBag.Movie.Title"> <br>
-            
+
         </div>
     </a>
         <div>
