@@ -7,7 +7,7 @@ $blue: #95B8d1;
 
 body{
     width: 100%;
-    min-width: 1000px;
+    min-width: 1200px;
     margin: 0;
 }
 .header{
@@ -15,6 +15,7 @@ body{
     background-color: $gray;
     padding: 10px;
     height: 10vh;
+    min-height: 73px;
     img{
         width: 50px;
         height: auto;
@@ -56,15 +57,69 @@ body{
     min-width: 290px;
     padding: 2%;
     background-color: $lightGray;
-    height: 90vh;
+    height: 100%;
     vertical-align: top;
     color: $blue;
+    h5{
+        display: inline-block;
+        margin-right: 5px;
+    }
+    img{
+        width: 20px;
+        height: auto;
+        display: inline-block;
+        vertical-align: top;
+        margin-top: 2px;
+    }
 }
 .body{
-    width: 74%;
+    width: 75%;
     display: inline-block;
     overflow: scroll;
-    height: 90vh;
+    height: 100%;
     vertical-align: top;
+}
+.bodyContainer{
+    width: 100%;
     background-color: $grey2;
+    height: 90vh;
+    min-height: 658px;
+}
+.formPopup{
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: 100vh;
+    width: 100%;
+    background-color: rgba(12, 27, 30, 0.6);
+    display:none;
+    min-width: 1200px;
+}
+.libraryForm{
+    width: 27.5%;
+    padding: 2.5%;
+    margin: auto;
+    background-color: $green;
+    height: 45vh;
+    margin-top: 27.5vh;
+    border-radius: 5px;
+    label{
+        width: 60px;
+    }
+    input{
+        margin-top: 20px;
+    }
+    select{
+        margin-top: 20px;
+    }
+    .submitButton{
+        margin-left: 185px;
+    }
+}
+.closeForm{
+    position: absolute;
+    color: $blue;
+    font-size: 40px;
+    top: 183px;
+    right: 403px;
 }

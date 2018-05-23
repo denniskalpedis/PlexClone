@@ -107,12 +107,24 @@ namespace PlexClone.Controllers{
                 return View("AddLibrary");
             }
             // IEnumerable<FileInfo> allfiles = model.Folder.EnumerateFiles();
-            // add folder to DB
+            // add folder to DB    *****************************
+           
+            _context.Libraries.Add(model);
+             _context.SaveChanges();
+            // *********************************
             List<string> allfiles = Directory.GetFiles(model.Folder, "*.*", SearchOption.AllDirectories).ToList();
             allfiles = allfiles.Where(f => moviefiletypes.Contains(Path.GetExtension(f))).ToList();
             System.Console.WriteLine(allfiles.Count);
             foreach(var file in allfiles){
                 //Add file to DB
+                PlexClone.Models.File nfile = new PlexClone.Models.File{
+                    Path = file,
+                    Library= model
+
+                };
+                _context.Files.Add(nfile);
+                _context.SaveChanges();
+
                 GetVideoInfo(file);
                 System.Console.WriteLine(file);
                 FileInfo finfo = new FileInfo(file);

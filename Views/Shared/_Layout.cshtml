@@ -21,12 +21,19 @@
             </form>
         </div>
     </div>
-    <div class="leftNav">
+    <div class="bodyContainer">
+        <div class="leftNav">
         <h5>LIBRARIES</h5>
+        <img id="addLibraryButton"src="~/Img/plus.png" alt="Plus sign.">
+        </div>
+        <div class="body">
+            <!-- Your View will be rendered in place of RenderBody -->
+            @RenderBody()
+        </div>
     </div>
-    <div class="body">
-        <!-- Your View will be rendered in place of RenderBody -->
-        @RenderBody()
+    <div class="formPopup"id="formPopup">
+        <div id="closeForm" class="closeForm">x</div>
+        @Html.Partial("AddLibrary")
     </div>
 
     <div class="footer">
