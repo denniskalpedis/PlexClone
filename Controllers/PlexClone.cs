@@ -14,6 +14,8 @@ using System.Net.Http;
 using System.Threading.Tasks;
 using System.Runtime.Serialization.Json;
 using System.Text;
+using Newtonsoft.Json;
+using System.Dynamic;
 
 namespace PlexClone.Controllers{
 	// [Route("/PlexClone")]
@@ -119,9 +121,50 @@ namespace PlexClone.Controllers{
                 if(idx != -1){
                     System.Console.WriteLine("Movie Name is " + temp.Substring(0, idx));
                     System.Console.WriteLine("Year is " + temp.Substring(idx+3));
-                    System.Console.WriteLine(_configuration["apikey"]);
-                    Movies movieresults = OMDBapiCall(temp.Substring(0,idx).Replace(" ", "+"), temp.Substring(idx+3), _configuration["apikey"]);
-                    System.Console.WriteLine(movieresults);
+                    // System.Console.WriteLine(_configuration["apikey"]);
+                    // Movies movieresults = OMDBapiCall(temp.Substring(0,idx).Replace(" ", "+"), temp.Substring(idx+3), _configuration["apikey"]);
+                    // System.Console.WriteLine(movieresults);
+                    var MovieInfo = new Dictionary<string, object>();
+                    OMDBapiCall(temp.Substring(0, idx), temp.Substring(idx+3), _configuration["apikey"], ApiResponse => { MovieInfo = ApiResponse; } ).Wait();
+
+                    dynamic newmovie = new ExpandoObject();
+                    newmovie.Title = (string)MovieInfo["Title"];
+                    newmovie.Year = (string)MovieInfo["Year"];
+                    newmovie.Runtime = (string)MovieInfo["Runtime"];
+                    newmovie.Poster = (string)MovieInfo["Poster"];
+                    newmovie.Plot = (string)MovieInfo["Plot"];
+                    newmovie.Rating = (string)MovieInfo["Rated"];
+                    newmovie.Actors = (string)MovieInfo["Actors"];
+                    newmovie.genre = (string)MovieInfo["Genre"];
+                    foreach(var item in (dynamic)MovieInfo["Ratings"]){
+                        if(item["Source"] == "Rotten Tomatoes"){
+                            newmovie.RottenTomatoesRating = item["Value"];
+                        } else if(item["Source"] == "Internet Movie Database"){
+                            newmovie.IMDBRating = item["Value"];
+                        }
+
+                    }
+                    if(newmovie.RottenTomatoesRating = null){
+                        newmovie.RottenTomatoesRating = "N/A";
+                    }
+                    if(newmovie.IMDBRating = null){
+                        newmovie.IMDBRating = "N/A";
+                    }
+                    System.Console.WriteLine(newmovie.RottenTomatoesRating);
+
+                    // Movies nmovie = new Movies {
+                    //     Title = (string)MovieInfo["Title"],
+                    //     Year = (string)MovieInfo["Year"],
+                    //     Runtime = (string)MovieInfo["Runtime"],
+                    //     Poster = (string)MovieInfo["Poster"],
+                    //     Plot = (string)MovieInfo["Plot"],
+                    //     Rating = (string)MovieInfo["Rated"],
+                    //     Actors = (string)MovieInfo["Actors"],
+                    //     genre = (string)MovieInfo["Genre"]
+
+                        
+                    // };
+                    System.Console.WriteLine(MovieInfo["ratings"]);
                     //search API "http://www.omdbapi.com/?t=temp.Substring(0,idx)&y=temp.Substring(idx+3)&plot=full&apikey=" + apikey
                 } else {
                     System.Console.WriteLine("Naming not matching");
@@ -131,25 +174,52 @@ namespace PlexClone.Controllers{
             return RedirectToAction("AddLibrary");
         }
 
-        public async static Task<Movies> OMDBapiCall(string movie, string year, string api)
-        {
-            try
-            {
-                string url = String.Format("http://www.omdbapi.com/?t=", movie, "&y=", year, "&plot=full&apikey=", api);
-                var response = _httpClient.GetAsync(url).Result;
-                var result = await response.Content.ReadAsStringAsync();
-                var serializer = new DataContractJsonSerializer(typeof(Movies));
-                var ms = new MemoryStream(Encoding.UTF8.GetBytes(result));
-                var data = (Movies)serializer.ReadObject(ms);
+        // public async static Task<Movies> OMDBapiCall(string movie, string year, string api)
+        // {
+        //     try
+        //     {
+        //         string url = String.Format("http://www.omdbapi.com/?t=", movie, "&y=", year, "&plot=full&apikey=", api);
+        //         var response = _httpClient.GetAsync(url).Result;
+        //         var result = await response.Content.ReadAsStringAsync();
+        //         var serializer = new DataContractJsonSerializer(typeof(Movies));
+        //         var ms = new MemoryStream(Encoding.UTF8.GetBytes(result));
+        //         var data = (Movies)serializer.ReadObject(ms);
 
-                return data;
-            }
-            catch (Exception exception)
+        //         return data;
+        //     }
+        //     catch (Exception exception)
+        //     {
+        //         Console.WriteLine(exception);
+        //         return null;
+        //     }
+        //     // return RedirectToAction("AddLibrary");
+        // }
+
+        public static async Task OMDBapiCall(string movie, string year, string api, Action<Dictionary<string, object>> Callback)
+        {
+            // Create a temporary HttpClient connection.
+            using (var Client = new HttpClient())
             {
-                Console.WriteLine(exception);
-                return null;
+                try
+                {
+                    Client.BaseAddress = new Uri($"http://www.omdbapi.com/?t={movie}&y={year}&plot=full&apikey={api}");
+                    HttpResponseMessage Response = await Client.GetAsync(""); // Make the actual API call.
+                    Response.EnsureSuccessStatusCode(); // Throw error if not successful.
+                    string StringResponse = await Response.Content.ReadAsStringAsync(); // Read in the response as a string.
+                     
+                    // Then parse the result into JSON and convert to a dictionary that we can use.
+                    // DeserializeObject will only parse the top level object, depending on the API we may need to dig deeper and continue deserializing
+                    Dictionary<string, object> JsonResponse = JsonConvert.DeserializeObject<Dictionary<string, object>>(StringResponse);
+                     
+                    // Finally, execute our callback, passing it the response we got.
+                    Callback(JsonResponse);
+                }
+                catch (HttpRequestException e)
+                {
+                    // If something went wrong, display the error.
+                    Console.WriteLine($"Request exception: {e.Message}");
+                }
             }
-            // return RedirectToAction("AddLibrary");
         }
 
         private static void GetVideoInfo(string file){
