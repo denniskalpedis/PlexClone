@@ -19,12 +19,18 @@ namespace PlexClone.Models{
 
 	public class File:BaseEntity{
 		public string Path{get;set;}
-		public Movies Movie{get;set;}
+		public string CodecName{get;set;}
+		public string Resolution{get;set;}
+		public string Format{get;set;}
+		public string Duration{get;set;}
+		public string Quality{get;set;}
+		public bool HD{get;set;}
+		public Movie Movie{get;set;}
 		public Libraries Library{get;set;}
 
 	}
 
-	public class Movies:BaseEntity{
+	public class Movie:BaseEntity{
 		public string Title{get;set;}
 		public string Year{get;set;}
 		public string Runtime{get;set;}
@@ -37,7 +43,7 @@ namespace PlexClone.Models{
 		public string genre{get;set;}
 		public List<File> MovieFiles{get;set;}
 
-		public Movies(){
+		public Movie(){
 			MovieFiles = new List<File>();
 		}
 

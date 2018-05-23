@@ -1,0 +1,21 @@
+@if (@ViewBag.Movie != null)
+{
+    @foreach (var version in @ViewBag.Movie.MovieFiles)
+    {
+        @version.Quality
+    }
+    <a href="">
+        <div class="d-inline-block">
+            <img src="@ViewBag.Movie.Poster" alt="@ViewBag.Movie.Title"> <br>
+            
+        </div>
+    </a>
+        <div>
+            @ViewBag.Movie.Title<br>
+            @ViewBag.Movie.Year<br>
+            @ViewBag.Movie.Runtime<br>
+            @ViewBag.Movie.Rating<br>
+            @ViewBag.Movie.RottenTomatoesRating<br>
+        </div>
+
+}

@@ -11,9 +11,10 @@ using System;
 namespace PlexClone.Migrations
 {
     [DbContext(typeof(PlexCloneContext))]
-    partial class PlexCloneContextModelSnapshot : ModelSnapshot
+    [Migration("20180523044832_updated")]
+    partial class updated
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
