@@ -20,8 +20,6 @@ using System.Dynamic;
 namespace PlexClone.Controllers{
 	// [Route("/PlexClone")]
     public class PlexCloneController:Controller{
-        // public static readonly IList<string> moviefiletype = new IReadOnlyCollection<string>(newList<string> {"m4v", "webm"});
-        // const static List<string> moviefiletypes = new List<string>(new string[] {"m4v", "webm", "mkv", "avi", "mov", "wmv", "mp4", "m4p", "mpg"});
         DriveInfo[] allDrives = DriveInfo.GetDrives();
         List<string> directories = new List<string>();
         private static readonly HttpClient _httpClient = new HttpClient();
@@ -47,28 +45,41 @@ namespace PlexClone.Controllers{
         [Route("")]
         public IActionResult Index(){
             ViewBag.drives = allDrives;
-            System.Console.WriteLine(allDrives[0].ToString());
+            ViewBag.Libraries = _context.Libraries;
             return View("Index");
         }
 
+        // [HttpGet]
+        // [Route("/{path}")]
+        // public IActionResult GetDir(int path){
+        //     // path = path.TrimEnd('!').Replace("!","/");
+        //     // System.Console.WriteLine(path);
+        //     // path = path.Substring(0, path.LastIndexOf('/') + 1);
+        //     directories = Directory.GetDirectories(allDrives[path].ToString()).ToList();
+        //     directories.Sort();
+        //     ViewBag.drives = allDrives;
+        //     ViewBag.current = directories;
+        //     // path = path.Replace('/', '!');
+        //     // if (path.Contains("!")){
+        //     //     ViewBag.path = path.Substring(0, path.LastIndexOf('!') + 1);
+        //     // } else{
+        //     //     ViewBag.path = path;
+        //     // }
+        //     return View("Index");
+        // }
+
         [HttpGet]
-        [Route("/{path}")]
-        public IActionResult GetDir(int path){
-            // path = path.TrimEnd('!').Replace("!","/");
-            // System.Console.WriteLine(path);
-            // path = path.Substring(0, path.LastIndexOf('/') + 1);
-            
-            directories = Directory.GetDirectories(allDrives[path].ToString()).ToList();
-            directories.Sort();
-            ViewBag.drives = allDrives;
-            ViewBag.current = directories;
-            // path = path.Replace('/', '!');
-            // if (path.Contains("!")){
-            //     ViewBag.path = path.Substring(0, path.LastIndexOf('!') + 1);
-            // } else{
-            //     ViewBag.path = path;
-            // }
-            return View("Index");
+        [Route("/{libraryid}")]
+        public IActionResult LoadLibrary(int libraryid){
+            ViewBag.Movies = _context.Movies;
+            return View("Library");
+        }
+
+        [HttpGet]
+        [Route("/movie/{movieid}")]
+        public IActionResult LoadMovie(int movieid){
+            ViewBag.Movie = _context.Movies.SingleOrDefault(m => m.id == movieid);
+            return View("Movie");
         }
 
         [HttpGet]
@@ -92,13 +103,13 @@ namespace PlexClone.Controllers{
             // }
             return View("Index");
         }
+
         [HttpGet]
         [Route("AddLibrary")]
         public IActionResult AddLibrary(){
-
-        
             return View();
         }
+
         [HttpPost]
         [Route("AddLibrary")]
         public IActionResult AddNewLibrary(Libraries model){
@@ -106,26 +117,46 @@ namespace PlexClone.Controllers{
                 ModelState.AddModelError("Folder", "Path does not exist or you don't have permission.");
                 return View("AddLibrary");
             }
-            // IEnumerable<FileInfo> allfiles = model.Folder.EnumerateFiles();
-            // add folder to DB    *****************************
-           
             _context.Libraries.Add(model);
-             _context.SaveChanges();
-            // *********************************
+            _context.SaveChanges();
             List<string> allfiles = Directory.GetFiles(model.Folder, "*.*", SearchOption.AllDirectories).ToList();
             allfiles = allfiles.Where(f => moviefiletypes.Contains(Path.GetExtension(f))).ToList();
             System.Console.WriteLine(allfiles.Count);
             foreach(var file in allfiles){
-                //Add file to DB
-                PlexClone.Models.File nfile = new PlexClone.Models.File{
-                    Path = file,
-                    Library= model
-
-                };
-                _context.Files.Add(nfile);
-                _context.SaveChanges();
-
-                GetVideoInfo(file);
+                string info = GetVideoInfo(file);
+                dynamic JsonResponse = JsonConvert.DeserializeObject<dynamic>(info);
+                bool hd = true;
+                string quality = "";
+                // switch (JsonResponse["streams"][0]["width"])
+                // {
+                //     case 1920:
+                //         hd = true;
+                //         quality = "1080P";
+                //         break;
+                //     case 1280:
+                //         hd = true;
+                //         quality = "720P";
+                //         break;
+                //     case 480:
+                //         hd = false;
+                //         quality = "480P";
+                //         break;
+                // }
+                if (JsonResponse["streams"][0]["width"] == 1920){
+                    hd = true;
+                    quality = "1080P";
+                } else if (JsonResponse["streams"][0]["width"] == 1280){
+                    hd = true;
+                    quality = "720P";
+                } else if (JsonResponse["streams"][0]["width"] == 480){
+                    hd = false;
+                    quality = "480P";
+                }
+                System.Console.WriteLine(JsonResponse["format"]["format_long_name"]);
+                System.Console.WriteLine(JsonResponse["streams"][0]["width"] + "x" + JsonResponse["streams"][0]["height"]);
+                TimeSpan t = TimeSpan.FromSeconds((double)JsonResponse["streams"][0]["duration"]);
+                string time = t.ToString(@"hh\:mm\:ss\:fff");
+                System.Console.WriteLine(time);
                 System.Console.WriteLine(file);
                 FileInfo finfo = new FileInfo(file);
                 string temp = finfo.Directory.Name;
@@ -133,55 +164,77 @@ namespace PlexClone.Controllers{
                 if(idx != -1){
                     System.Console.WriteLine("Movie Name is " + temp.Substring(0, idx));
                     System.Console.WriteLine("Year is " + temp.Substring(idx+3));
-                    // System.Console.WriteLine(_configuration["apikey"]);
                     // Movies movieresults = OMDBapiCall(temp.Substring(0,idx).Replace(" ", "+"), temp.Substring(idx+3), _configuration["apikey"]);
-                    // System.Console.WriteLine(movieresults);
                     var MovieInfo = new Dictionary<string, object>();
                     OMDBapiCall(temp.Substring(0, idx), temp.Substring(idx+3), _configuration["apikey"], ApiResponse => { MovieInfo = ApiResponse; } ).Wait();
-
-                    dynamic newmovie = new ExpandoObject();
-                    newmovie.Title = (string)MovieInfo["Title"];
-                    newmovie.Year = (string)MovieInfo["Year"];
-                    newmovie.Runtime = (string)MovieInfo["Runtime"];
-                    newmovie.Poster = (string)MovieInfo["Poster"];
-                    newmovie.Plot = (string)MovieInfo["Plot"];
-                    newmovie.Rating = (string)MovieInfo["Rated"];
-                    newmovie.Actors = (string)MovieInfo["Actors"];
-                    newmovie.genre = (string)MovieInfo["Genre"];
+                    // dynamic newmovie = new ExpandoObject();
+                    // newmovie.Title = (string)MovieInfo["Title"];
+                    // newmovie.Year = (string)MovieInfo["Year"];
+                    // newmovie.Runtime = (string)MovieInfo["Runtime"];
+                    // newmovie.Poster = (string)MovieInfo["Poster"];
+                    // newmovie.Plot = (string)MovieInfo["Plot"];
+                    // newmovie.Rating = (string)MovieInfo["Rated"];
+                    // newmovie.Actors = (string)MovieInfo["Actors"];
+                    // newmovie.genre = (string)MovieInfo["Genre"];
+                    string rtr = null;
+                    string imdbr = null;
                     foreach(var item in (dynamic)MovieInfo["Ratings"]){
                         if(item["Source"] == "Rotten Tomatoes"){
-                            newmovie.RottenTomatoesRating = item["Value"];
+                            rtr = (string)item["Value"];
                         } else if(item["Source"] == "Internet Movie Database"){
-                            newmovie.IMDBRating = item["Value"];
+                            imdbr = (string)item["Value"];
                         }
-
                     }
-                    if(newmovie.RottenTomatoesRating = null){
-                        newmovie.RottenTomatoesRating = "N/A";
+                    if(rtr == null){
+                        rtr = "N/A";
                     }
-                    if(newmovie.IMDBRating = null){
-                        newmovie.IMDBRating = "N/A";
+                    if(imdbr == null){
+                        imdbr = "N/A";
                     }
-                    System.Console.WriteLine(newmovie.RottenTomatoesRating);
-
-                    // Movies nmovie = new Movies {
-                    //     Title = (string)MovieInfo["Title"],
-                    //     Year = (string)MovieInfo["Year"],
-                    //     Runtime = (string)MovieInfo["Runtime"],
-                    //     Poster = (string)MovieInfo["Poster"],
-                    //     Plot = (string)MovieInfo["Plot"],
-                    //     Rating = (string)MovieInfo["Rated"],
-                    //     Actors = (string)MovieInfo["Actors"],
-                    //     genre = (string)MovieInfo["Genre"]
-
-                        
-                    // };
-                    System.Console.WriteLine(MovieInfo["ratings"]);
+                    // System.Console.WriteLine(newmovie.RottenTomatoesRating);
+                    Movie nmovie = new Movie{
+                        Title = (string)MovieInfo["Title"],
+                        Year = (string)MovieInfo["Year"],
+                        Runtime = (string)MovieInfo["Runtime"],
+                        Poster = (string)MovieInfo["Poster"],
+                        Plot = (string)MovieInfo["Plot"],
+                        Rating = (string)MovieInfo["Rated"],
+                        Actors = (string)MovieInfo["Actors"],
+                        genre = (string)MovieInfo["Genre"],
+                        RottenTomatoesRating = rtr,
+                        IMDBRating = imdbr
+                    }; 
+                    _context.Movies.Add(nmovie);
+                    _context.SaveChanges();
+                    PlexClone.Models.File nfile = new PlexClone.Models.File{
+                        Path = file,
+                        Library= model,
+                        Movie = nmovie,
+                        CodecName = JsonResponse["streams"][0]["codec_name"],
+                        Resolution = JsonResponse["streams"][0]["width"] + "x" + JsonResponse["streams"][0]["height"],
+                        Format = JsonResponse["format"]["format_long_name"],
+                        Duration = time,
+                        Quality = quality,
+                        HD = hd
+                    };
+                    _context.Files.Add(nfile);
+                    _context.SaveChanges();
                     //search API "http://www.omdbapi.com/?t=temp.Substring(0,idx)&y=temp.Substring(idx+3)&plot=full&apikey=" + apikey
                 } else {
+                    PlexClone.Models.File nfile = new PlexClone.Models.File{
+                        Path = file,
+                        Library= model,
+                        CodecName = JsonResponse["streams"][0]["codec_name"],
+                        Resolution = JsonResponse["streams"][0]["width"] + "x" + JsonResponse["streams"][0]["height"],
+                        Format = JsonResponse["format"]["format_long_name"],
+                        Duration = time,
+                        Quality = quality,
+                        HD = hd
+                    };  
+                    _context.Files.Add(nfile);
+                    _context.SaveChanges();
                     System.Console.WriteLine("Naming not matching");
                 }
-                
             }
             return RedirectToAction("AddLibrary");
         }
@@ -206,7 +259,6 @@ namespace PlexClone.Controllers{
         //     }
         //     // return RedirectToAction("AddLibrary");
         // }
-
         public static async Task OMDBapiCall(string movie, string year, string api, Action<Dictionary<string, object>> Callback)
         {
             // Create a temporary HttpClient connection.
@@ -234,8 +286,7 @@ namespace PlexClone.Controllers{
             }
         }
 
-        private static void GetVideoInfo(string file){
-            // System.Console.WriteLine(Directory.GetCurrentDirectory() + Path.DirectorySeparatorChar + "bin" + Path.DirectorySeparatorChar + "ffprobe.exe");
+        public static dynamic GetVideoInfo(string file){
             OperatingSystem os = Environment.OSVersion;
             PlatformID pid = os.Platform;
             string ffprobeName = "";
@@ -250,7 +301,7 @@ namespace PlexClone.Controllers{
                         ffprobeName = "ffprobe.exe";
                     } else {
                         System.Console.WriteLine("You need ffprobe!");
-                        return;
+                        return false;
                     }
                     break;
                 case PlatformID.Unix:
@@ -259,7 +310,7 @@ namespace PlexClone.Controllers{
                         ffprobeName = "ffprobe";
                     } else {
                         System.Console.WriteLine("You need ffprobe!");
-                        return;
+                        return false;
                     }
                     break;
                 case PlatformID.MacOSX:
@@ -268,17 +319,16 @@ namespace PlexClone.Controllers{
                         ffprobeName = "ffprobe";
                     } else {
                         System.Console.WriteLine("You need ffprobe!");
-                        return;
+                        return false;
                     }
                     break;
                 default:
                     Console.WriteLine("Don't know your OS!");
-                    return;
+                    return false;
                 }
             string basePath = Directory.GetCurrentDirectory() + Path.DirectorySeparatorChar + "bin" + Path.DirectorySeparatorChar + ffprobeName;
             string filePath = file;
-            string cmd = string.Format(" -v quiet -print_format json -show_format -show_streams  \"{0}\"", filePath);
-            System.Console.WriteLine(basePath + cmd);
+            string cmd = string.Format(" -v quiet -print_format json -show_format -show_streams \"{0}\"", filePath);
             Process proc = new Process();
             proc.StartInfo.FileName = basePath;
             proc.StartInfo.Arguments = cmd;
@@ -290,17 +340,16 @@ namespace PlexClone.Controllers{
             if (!proc.Start())
             {
                 Console.WriteLine("Error starting");
-                return;
+                return false;
             }
             string info = proc.StandardOutput.ReadToEnd();
             System.Console.WriteLine(info);
             proc.WaitForExit();
             proc.Close();
+            return info;
 
         }
-    // public partial class _Directory : System.Web.UI.Page
-    // {
 
-    // }
+
     }
 }

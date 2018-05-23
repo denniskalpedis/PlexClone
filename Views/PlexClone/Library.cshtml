@@ -1,0 +1,12 @@
+@if (@ViewBag.Movies != null)
+{
+    @foreach(var Movie in @ViewBag.Movies)
+    {
+        <a href="/movie/@Movie.id">
+            <div class="d-inline-block">
+                <img src="@Movie.Poster" alt="@Movie.Title"> <br>
+                @Movie.Title
+            </div>
+        </a>
+    }
+}

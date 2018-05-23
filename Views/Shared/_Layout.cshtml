@@ -25,6 +25,11 @@
         <div class="leftNav">
         <h5>LIBRARIES</h5>
         <img id="addLibraryButton"src="~/Img/plus.png" alt="Plus sign.">
+        @if(@ViewBag.Libraries != null){
+            @foreach(var library in @ViewBag.Libraries){
+                <a href="/@library.id">@library.Name</a>
+            }
+        }
         </div>
         <div class="body">
             <!-- Your View will be rendered in place of RenderBody -->

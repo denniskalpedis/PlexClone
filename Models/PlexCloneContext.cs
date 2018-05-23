@@ -9,7 +9,7 @@ namespace PlexClone.Models{
 
         public DbSet<File> Files { get; set; }
 
-        public DbSet<Movies> Movies { get; set; }
+        public DbSet<Movie> Movies { get; set; }
 
     }
 }
