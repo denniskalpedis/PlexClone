@@ -46,6 +46,7 @@ namespace PlexClone.Controllers{
         public IActionResult Index(){
             ViewBag.drives = allDrives;
             ViewBag.Libraries = _context.Libraries;
+            ViewBag.Movies = _context.Movies.Include(f => f.MovieFiles);
             return View("Index");
         }
 
@@ -72,7 +73,8 @@ namespace PlexClone.Controllers{
         [Route("/{libraryid}")]
         public IActionResult LoadLibrary(int libraryid){
             ViewBag.Libraries = _context.Libraries;
-            ViewBag.Movies = _context.Movies.Include(f => f.MovieFiles);
+            ViewBag.Library = _context.Libraries.Include(m => m.Files).ThenInclude(m => m.Movie).SingleOrDefault(i => i.id == libraryid);
+            
             return View("Library");
         }
 
@@ -80,8 +82,15 @@ namespace PlexClone.Controllers{
         [Route("/movie/{movieid}")]
         public IActionResult LoadMovie(int movieid){
             ViewBag.Libraries = _context.Libraries;
-            ViewBag.Movie = _context.Movies.SingleOrDefault(m => m.id == movieid);
+            ViewBag.Movie = _context.Movies.Include(f => f.MovieFiles).SingleOrDefault(m => m.id == movieid);
             return View("Movie");
+        }
+
+        [Route("/play/{movieid}")]
+        public IActionResult PlayMovie(int movieid){
+            ViewBag.Movie = _context.Movies.Include(f => f.MovieFiles).SingleOrDefault(m => m.id == movieid);
+            System.Console.WriteLine(ViewBag.Movie.MovieFiles.Count);
+            return View();
         }
 
         [HttpGet]
@@ -157,7 +166,7 @@ namespace PlexClone.Controllers{
                 System.Console.WriteLine(JsonResponse["format"]["format_long_name"]);
                 System.Console.WriteLine(JsonResponse["streams"][0]["width"] + "x" + JsonResponse["streams"][0]["height"]);
                 TimeSpan t = TimeSpan.FromSeconds((double)JsonResponse["streams"][0]["duration"]);
-                string time = t.ToString(@"hh\:mm\:ss\:fff");
+                string time = t.ToString(@"hh\:mm\:ss");
                 System.Console.WriteLine(time);
                 System.Console.WriteLine(file);
                 FileInfo finfo = new FileInfo(file);
