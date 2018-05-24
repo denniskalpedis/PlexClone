@@ -1,6 +1,6 @@
 body {
   width: 100%;
-  min-width: 1200px;
+  min-width: 1340px;
   margin: 0;
 }
 
@@ -30,7 +30,7 @@ body {
   height: auto;
   margin-right: 5px;
 }
-.header .search form {
+.header .search .form {
   display: inline-block;
 }
 .header .search input {
@@ -41,9 +41,6 @@ body {
 }
 .header .search input:focus {
   outline: none !important;
-}
-.header .search .SubmitButton {
-  display: none;
 }
 
 .leftNav {
@@ -69,11 +66,12 @@ body {
 }
 
 .body {
-  width: 75%;
+  width: 78%;
   display: inline-block;
   overflow: scroll;
   height: 100%;
   vertical-align: top;
+  padding: 20px 50px;
 }
 
 .bodyContainer {
@@ -91,22 +89,24 @@ body {
   width: 100%;
   background-color: rgba(12, 27, 30, 0.6);
   display: none;
+  min-width: 1340px;
 }
 
 .libraryForm {
   width: 27.5%;
-  padding: 2.5%;
+  padding: 2% 2.5% 2.5% 2.5%;
   margin: auto;
   background-color: #448FA3;
   height: 45vh;
   margin-top: 27.5vh;
   border-radius: 5px;
+  min-height: 360px;
 }
 .libraryForm label {
   width: 60px;
 }
 .libraryForm input {
-  margin-top: 20px;
+  margin-bottom: 20px;
 }
 .libraryForm select {
   margin-top: 20px;
@@ -116,11 +116,27 @@ body {
 }
 
 .closeForm {
-  position: absolute;
   color: #95B8d1;
   font-size: 40px;
-  top: 183px;
-  right: 403px;
+  float: right;
+  margin-top: -93px;
+  margin-right: -68px;
+}
+
+.movieContainer {
+  display: inline-block;
+  height: 400px;
+  vertical-align: top;
+}
+.movieContainer img {
+  height: 250px;
+  width: auto;
+  margin: auto;
+}
+.movieContainer h3 {
+  font-size: 18px;
+  color: #95B8d1;
+  margin-top: 15px;
 }
 
 /*# sourceMappingURL=wwwroot/css/styles.css.map */

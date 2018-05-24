@@ -156,7 +156,12 @@ namespace PlexClone.Controllers{
                 }
                 System.Console.WriteLine(JsonResponse["format"]["format_long_name"]);
                 System.Console.WriteLine(JsonResponse["streams"][0]["width"] + "x" + JsonResponse["streams"][0]["height"]);
-                TimeSpan t = TimeSpan.FromSeconds((double)JsonResponse["streams"][0]["duration"]);
+                TimeSpan t = new TimeSpan();
+                if(JsonResponse["streams"][0]["duration"] != null){
+                    t = TimeSpan.FromSeconds((double)JsonResponse["streams"][0]["duration"]);
+                }else{
+                    t = TimeSpan.FromSeconds((double)JsonResponse["format"]["duration"]);
+                }
                 string time = t.ToString(@"hh\:mm\:ss\:fff");
                 System.Console.WriteLine(time);
                 System.Console.WriteLine(file);
