@@ -27,7 +27,7 @@
         <img id="addLibraryButton"src="~/Img/plus.png" alt="Plus sign.">
         @if(@ViewBag.Libraries != null){
             @foreach(var library in @ViewBag.Libraries){
-                <a href="/@library.id">@library.Name</a>
+                <br><a href="/@library.id">@library.Name</a><a href="/refresh/@library.id"><img src="~/Img/refresh.png" alt="refresh"></a><a href="/dellibrary/@library.id"><img src="~/Img/delete.png" alt="trash"></a>
             }
         }
         </div>
