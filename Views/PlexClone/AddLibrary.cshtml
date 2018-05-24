@@ -1,5 +1,7 @@
 @model PlexClone.Models.Libraries
 <form class="libraryForm" action="AddLibrary" method="POST">
+    <div id="closeForm" class="closeForm">x</div>
+    <span asp-validation-for="Name"></span> <br>
     <label for="Name">Name:</label>
     <input type="text" name="Name"> <br>
     <span asp-validation-for="Folder"></span> <br>
