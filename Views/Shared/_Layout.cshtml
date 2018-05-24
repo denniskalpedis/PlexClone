@@ -16,10 +16,9 @@
         <a href="/"><img src="~/Img/house.jpg" alt="Home icon."></a>
         <div class="search">
             <img src="~/Img/search.png" alt="Magnifying glass icon.">
-            <form action="">
-                <input type="text" name="search">
-                <input class="SubmitButton" type="Submit">
-            </form>
+            <div class="form">
+                <input id="search" type="text" name="search">
+            </div>
         </div>
     </div>
     <div class="bodyContainer">
@@ -32,20 +31,18 @@
             }
         }
         </div>
-        <div class="body p-4">
+        <div id="moviesDisplay" class="body">
             <!-- Your View will be rendered in place of RenderBody -->
             @RenderBody()
         </div>
     </div>
     <div class="formPopup"id="formPopup">
-        <div id="closeForm" class="closeForm">x</div>
         @Html.Partial("AddLibrary")
     </div>
 
     <div class="footer">
 
     </div>
-
     @RenderSection("Scripts", required: false)
 </body>
 </html>
