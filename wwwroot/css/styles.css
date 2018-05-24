@@ -123,4 +123,12 @@ body {
   right: 403px;
 }
 
+.poster {
+  height: 215px;
+}
+
+.movie {
+  width: 160px;
+}
+
 /*# sourceMappingURL=wwwroot/css/styles.css.map */

@@ -3,8 +3,8 @@
     @foreach(var Movie in @ViewBag.Movies)
     {
         <a href="/movie/@Movie.id">
-            <div class="d-inline-block">
-                <img src="@Movie.Poster" alt="@Movie.Title"> <br>
+            <div class="d-inline-block movie">
+                <img src="@Movie.Poster" alt="@Movie.Title" class="poster"> <br>
                 @Movie.Title
             </div>
         </a>
