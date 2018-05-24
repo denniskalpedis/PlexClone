@@ -124,9 +124,21 @@ namespace PlexClone.Controllers{
         [HttpPost]
         [Route("AddLibrary")]
         public IActionResult AddNewLibrary(Libraries model){
-            if (!Directory.Exists(model.Folder)){
+            if (!Directory.Exists(model.Folder) || model.Name == null){
                 ModelState.AddModelError("Folder", "Path does not exist or you don't have permission.");
-                return View("AddLibrary");
+                return View("Index");
+            }
+            else if (_context.Libraries.Any(l => l.Name == model.Name)){
+                ModelState.AddModelError("Name", "Library Name already exists.");
+                return View("Index");
+            }
+            else if (model.Name == null){
+                ModelState.AddModelError("Name", "Can't be Empty.");
+                return View("Index");
+            }
+            else if (_context.Libraries.Any(l => l.Folder == model.Folder)){
+                ModelState.AddModelError("Folder", "Folder alrady exists in another Library.");
+                return View("Index");
             }
             _context.Libraries.Add(model);
             _context.SaveChanges();
@@ -194,38 +206,61 @@ namespace PlexClone.Controllers{
                     // newmovie.genre = (string)MovieInfo["Genre"];
                     string rtr = null;
                     string imdbr = null;
-                    if((dynamic)MovieInfo["Error"] == "Movie not found!"){
+                    Movie nmovie = new Movie();
+                    if((dynamic)MovieInfo.ContainsKey("Error") && (dynamic)MovieInfo["Error"] == "Movie not found!"){
 
-                    }
-                    System.Console.WriteLine((dynamic)MovieInfo["Ratings"]);
-                    foreach(var item in (dynamic)MovieInfo["Ratings"]){
-                        if(item["Source"] == "Rotten Tomatoes"){
-                            rtr = (string)item["Value"];
-                        } else if(item["Source"] == "Internet Movie Database"){
-                            imdbr = (string)item["Value"];
+                        nmovie = new Movie{
+                            Title = Path.GetFileNameWithoutExtension(temp),
+                            Year = null,
+                            Runtime = null,
+                            Poster = "/Img/unknown.jpg",
+                            Plot = null,
+                            Rating = null,
+                            Actors = null,
+                            genre = null,
+                            RottenTomatoesRating = null,
+                            IMDBRating = null
+                        }; 
+                    }else{
+                        System.Console.WriteLine((dynamic)MovieInfo["Ratings"]);
+                        foreach(var item in (dynamic)MovieInfo["Ratings"]){
+                            if(item["Source"] == "Rotten Tomatoes"){
+                                rtr = (string)item["Value"];
+                            } else if(item["Source"] == "Internet Movie Database"){
+                                imdbr = (string)item["Value"];
+                            }
+                        }
+                        if(rtr == null){
+                            rtr = "N/A";
+                        }
+                        if(imdbr == null){
+                            imdbr = "N/A";
+                        }
+                        // System.Console.WriteLine(newmovie.RottenTomatoesRating);
+                        nmovie = new Movie{
+                            Title = (string)MovieInfo["Title"],
+                            Year = (string)MovieInfo["Year"],
+                            Runtime = (string)MovieInfo["Runtime"],
+                            Poster = (string)MovieInfo["Poster"],
+                            Plot = (string)MovieInfo["Plot"],
+                            Rating = (string)MovieInfo["Rated"],
+                            Actors = (string)MovieInfo["Actors"],
+                            genre = (string)MovieInfo["Genre"],
+                            RottenTomatoesRating = rtr,
+                            IMDBRating = imdbr
+                        };
+                        if(nmovie.Poster == "N/A"){
+                            nmovie.Poster = "/Img/unknown.jpg";
                         }
                     }
-                    if(rtr == null){
-                        rtr = "N/A";
+                    if (_context.Movies.Any(m => m.Title == nmovie.Title) && _context.Movies.Any(m => m.Year == nmovie.Year)){
+                        nmovie = _context.Movies.SingleOrDefault(m => m.Title == nmovie.Title && m.Year == nmovie.Year);
+                    }else {
+                        _context.Movies.Add(nmovie);
+                        _context.SaveChanges();
                     }
-                    if(imdbr == null){
-                        imdbr = "N/A";
-                    }
-                    // System.Console.WriteLine(newmovie.RottenTomatoesRating);
-                    Movie nmovie = new Movie{
-                        Title = (string)MovieInfo["Title"],
-                        Year = (string)MovieInfo["Year"],
-                        Runtime = (string)MovieInfo["Runtime"],
-                        Poster = (string)MovieInfo["Poster"],
-                        Plot = (string)MovieInfo["Plot"],
-                        Rating = (string)MovieInfo["Rated"],
-                        Actors = (string)MovieInfo["Actors"],
-                        genre = (string)MovieInfo["Genre"],
-                        RottenTomatoesRating = rtr,
-                        IMDBRating = imdbr
-                    }; 
-                    _context.Movies.Add(nmovie);
-                    _context.SaveChanges();
+
+
                     PlexClone.Models.File nfile = new PlexClone.Models.File{
                         Path = file,
                         Library= model,
