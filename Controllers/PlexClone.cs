@@ -89,7 +89,7 @@ namespace PlexClone.Controllers{
         [Route("/play/{movieid}")]
         public IActionResult PlayMovie(int movieid){
             ViewBag.Movie = _context.Movies.Include(f => f.MovieFiles).SingleOrDefault(m => m.id == movieid);
-            System.Console.WriteLine(ViewBag.Movie.MovieFiles.Count);
+            System.Console.WriteLine(ViewBag.Movie.MovieFiles[0].Path);
             return View();
         }
 
@@ -165,7 +165,12 @@ namespace PlexClone.Controllers{
                 }
                 System.Console.WriteLine(JsonResponse["format"]["format_long_name"]);
                 System.Console.WriteLine(JsonResponse["streams"][0]["width"] + "x" + JsonResponse["streams"][0]["height"]);
-                TimeSpan t = TimeSpan.FromSeconds((double)JsonResponse["streams"][0]["duration"]);
+                TimeSpan t = new TimeSpan();
+                if(JsonResponse["streams"][0]["duration"] != null){
+                    t = TimeSpan.FromSeconds((double)JsonResponse["streams"][0]["duration"]);
+                }else{
+                    t = TimeSpan.FromSeconds((double)JsonResponse["format"]["duration"]);
+                }
                 string time = t.ToString(@"hh\:mm\:ss");
                 System.Console.WriteLine(time);
                 System.Console.WriteLine(file);
@@ -189,6 +194,10 @@ namespace PlexClone.Controllers{
                     // newmovie.genre = (string)MovieInfo["Genre"];
                     string rtr = null;
                     string imdbr = null;
+                    if((dynamic)MovieInfo["Error"] == "Movie not found!"){
+
+                    }
+                    System.Console.WriteLine((dynamic)MovieInfo["Ratings"]);
                     foreach(var item in (dynamic)MovieInfo["Ratings"]){
                         if(item["Source"] == "Rotten Tomatoes"){
                             rtr = (string)item["Value"];
@@ -247,7 +256,7 @@ namespace PlexClone.Controllers{
                     System.Console.WriteLine("Naming not matching");
                 }
             }
-            return RedirectToAction("AddLibrary");
+            return RedirectToAction("Index");
         }
 
         // public async static Task<Movies> OMDBapiCall(string movie, string year, string api)
@@ -360,7 +369,6 @@ namespace PlexClone.Controllers{
             return info;
 
         }
-
 
     }
 }
