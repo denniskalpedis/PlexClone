@@ -7,7 +7,7 @@ $blue: #95B8d1;
 
 body{
     width: 100%;
-    min-width: 1200px;
+    min-width: 1340px;
     margin: 0;
 }
 .header{
@@ -34,7 +34,7 @@ body{
             height: auto;
             margin-right: 5px;
         }
-        form{
+        .form{
             display: inline-block;
         }
         input{
@@ -45,9 +45,6 @@ body{
         }
         input:focus{
             outline: none !important;
-        }
-        .SubmitButton{
-            display: none;
         }
     }
 }
@@ -73,11 +70,12 @@ body{
     }
 }
 .body{
-    width: 75%;
+    width: 78%;
     display: inline-block;
     overflow: scroll;
     height: 100%;
     vertical-align: top;
+    padding: 20px 50px;
 }
 .bodyContainer{
     width: 100%;
@@ -93,21 +91,22 @@ body{
     width: 100%;
     background-color: rgba(12, 27, 30, 0.6);
     display:none;
-    min-width: 1200px;
+    min-width: 1340px;
 }
 .libraryForm{
     width: 27.5%;
-    padding: 2.5%;
+    padding: 2% 2.5% 2.5% 2.5%;
     margin: auto;
     background-color: $green;
     height: 45vh;
     margin-top: 27.5vh;
     border-radius: 5px;
+    min-height: 360px;
     label{
         width: 60px;
     }
     input{
-        margin-top: 20px;
+        margin-bottom: 20px;
     }
     select{
         margin-top: 20px;
@@ -117,9 +116,25 @@ body{
     }
 }
 .closeForm{
-    position: absolute;
     color: $blue;
     font-size: 40px;
-    top: 183px;
-    right: 403px;
+    float: right;
+    margin-top: -93px;
+    margin-right: -68px;
+}
+.movieContainer{
+    // width: 24%;
+    display: inline-block;
+    height: 400px;
+    vertical-align: top;
+    img{
+        height: 250px;
+        width: auto;
+        margin: auto;
+    }
+    h3{
+        font-size: 18px;
+        color:$blue;
+        margin-top: 15px;
+    }
 }
