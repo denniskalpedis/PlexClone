@@ -27,10 +27,11 @@
         <img id="addLibraryButton"src="~/Img/plus.png" alt="Plus sign.">
         @if(@ViewBag.Libraries != null){
             @foreach(var library in @ViewBag.Libraries){
-                <a href="/@library.id">@library.Name</a>
+                <p onclick="renderLibrary(@library.id)">@library.Name</p>
             }
         }
         </div>
+        <div id="singleMovieContainer"></div>
         <div id="moviesDisplay" class="body">
             <!-- Your View will be rendered in place of RenderBody -->
             @RenderBody()
