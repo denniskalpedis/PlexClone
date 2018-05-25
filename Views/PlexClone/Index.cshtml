@@ -1,5 +1,5 @@
 @if (@ViewBag.Movies != null)
 {
     @foreach(var Movie in @ViewBag.Movies)
-    {<div class="movieContainer col-3" onclick="renderMovie(@Movie.id)"><img src="@Movie.Poster"><h3>@Movie.Title</h3><p>@Movie.Year</p></div>}
+    {<div class="movieContainer col-3 hover" onclick="renderMovie(@Movie.id)"><img src="@Movie.Poster"><h3>@Movie.Title</h3><p>@Movie.Year</p></div>}
 }

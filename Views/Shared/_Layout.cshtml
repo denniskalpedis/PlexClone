@@ -23,12 +23,12 @@
     </div>
     <div class="bodyContainer">
         <div class="leftNav">
-        <h5>LIBRARIES</h5>
-        <img id="addLibraryButton"src="~/Img/plus.png" alt="Plus sign.">
+        <h4>LIBRARIES</h4>
+        <img id="addLibraryButton" class="hover" src="~/Img/plus.png" alt="Plus sign.">
         @if(@ViewBag.Libraries != null){
             @foreach(var library in @ViewBag.Libraries){
-                <p onclick="renderLibrary(@library.id)">@library.Name</p>
-                <br><a href="/@library.id">@library.Name</a><a href="/refresh/@library.id"><img src="~/Img/refresh.png" alt="refresh"></a><a href="/dellibrary/@library.id"><img src="~/Img/delete.png" alt="trash"></a>
+                <p class="library hover" onclick="renderLibrary(@library.id)">@library.Name <img class="refresh" src="~/Img/refresh.png" alt="refresh"><img class="delete" src="~/Img/delete.png" alt="trash"></p>
+                <!-- <br><a href="/@library.id">@library.Name</a><a href="/refresh/@library.id"><</a><a href="/dellibrary/@library.id"><img src="~/Img/delete.png" alt="trash"></a> -->
             }
         }
         </div>
