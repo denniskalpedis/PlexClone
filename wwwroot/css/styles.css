@@ -53,9 +53,10 @@ body {
   vertical-align: top;
   color: #95B8d1;
 }
-.leftNav h5 {
+.leftNav h4 {
   display: inline-block;
   margin-right: 5px;
+  color: #111A1D;
 }
 .leftNav img {
   width: 20px;
@@ -67,6 +68,16 @@ body {
 .leftNav p {
   color: #95B8d1;
   margin-left: 15px;
+}
+.leftNav .refresh {
+  margin-left: 10px;
+  height: 20px;
+  width: auto;
+  margin-right: 5px;
+}
+.leftNav .delete {
+  height: 20px;
+  width: auto;
 }
 
 .body {
@@ -131,6 +142,7 @@ body {
   display: inline-block;
   height: 380px;
   vertical-align: top;
+  color: #95B8d1;
 }
 .movieContainer img {
   height: 250px;
@@ -139,7 +151,6 @@ body {
 }
 .movieContainer h3 {
   font-size: 18px;
-  color: #95B8d1;
   margin-top: 15px;
 }
 
@@ -150,6 +161,49 @@ body {
   height: 100%;
   vertical-align: top;
   padding: 20px 50px;
+  color: #95B8d1;
+}
+#singleMovieContainer span {
+  color: #111A1D;
+}
+#singleMovieContainer div {
+  display: inline-block;
+  width: 50%;
+  vertical-align: top;
+}
+#singleMovieContainer .left img {
+  height: 470px;
+  width: auto;
+}
+#singleMovieContainer .left h3 {
+  font-size: 30px;
+  margin-top: 20px;
+}
+#singleMovieContainer .right {
+  margin-top: 50px;
+}
+#singleMovieContainer .right .play {
+  height: 35px;
+  width: auto;
+  display: inline-block;
+}
+#singleMovieContainer .right .rotten {
+  height: 35px;
+  width: auto;
+  display: inline-block;
+}
+
+.hover:hover {
+  color: white;
+  cursor: pointer;
+}
+.hover:hover h3 {
+  color: white;
+}
+
+.goBack {
+  font-size: 25px;
+  color: #95B8d1;
 }
 
 /*# sourceMappingURL=wwwroot/css/styles.css.map */
