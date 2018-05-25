@@ -31,8 +31,51 @@ namespace PlexClone.Controllers{
         [Route("allitems")]
         public JsonResult AllItems()
         {
-            List<Movie> All = _context.Movies.ToList();
-            return Json(All);
+            List<Movie> All = _context.Movies.Include(f => f.MovieFiles).ToList();
+            List<object> Movies = new List<object>();
+            
+
+
+            foreach(var item in All){
+                string mulitpleFiles = "";
+                if (item.MovieFiles.Count > 1){
+                    foreach(var file in item.MovieFiles){
+                        if (mulitpleFiles == ""){
+                            mulitpleFiles += file.Quality;
+                        } else {
+                            mulitpleFiles += ", " + file.Quality;
+                        }
+                        
+                    }
+                } else {
+                    mulitpleFiles = item.MovieFiles[0].Quality;
+                }
+                bool playable = false;
+                if(item.MovieFiles[0].CodecName != "svq3" && Path.GetExtension(item.MovieFiles[0].FilePath) != ".mkv"){
+                    playable = true;
+                } else {
+                    playable = false;
+                }
+                Movies.Add(new {
+                    title = item.Title,
+                    runtime = item.Runtime,
+                    id = item.id,
+                    year = item.Year,
+                    rottentomatoesrating = item.RottenTomatoesRating,
+                    imdbrating = item.IMDBRating,
+                    poster = item.Poster,
+                    plot = item.Plot,
+                    rating = item.Rating,
+                    actors = item.Actors,
+                    genre = item.genre,
+                    duration = item.MovieFiles[0].Duration,
+                    quality = item.MovieFiles[0].Quality,
+                    hd = item.MovieFiles[0].HD,
+                    mulitple = mulitpleFiles,
+                    isplayable = playable
+                });
+            }
+            return Json(Movies);
         }
 
         [HttpGet]

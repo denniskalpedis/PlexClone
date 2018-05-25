@@ -95,9 +95,6 @@ namespace PlexClone.Controllers{
         [Route("/play/{movieid}")]
         public IActionResult PlayMovie(int movieid){
             ViewBag.Movie = _context.Movies.Include(f => f.MovieFiles).SingleOrDefault(m => m.id == movieid);
-<<<<<<< HEAD
-            System.Console.WriteLine(ViewBag.Movie.MovieFiles[0].Path);
-=======
             string vidfolder = "wwwroot/vid/";
             System.Console.WriteLine(Directory.GetFiles(vidfolder, "*.*", SearchOption.AllDirectories).Count());
 
@@ -108,13 +105,12 @@ namespace PlexClone.Controllers{
             }
             System.Console.WriteLine(Directory.GetFiles(vidfolder, "*.*", SearchOption.AllDirectories).Count());
             string moviefile = ViewBag.Movie.MovieFiles[0].FilePath;
-            string newmoviefile = Directory.GetCurrentDirectory() + "/wwwroot/vid/" + Path.GetFileName(ViewBag.Movie.MovieFiles[0].FilePath) + Path.GetExtension(ViewBag.Movie.MovieFiles[0].FilePath);
+            string newmoviefile = Directory.GetCurrentDirectory() + "/wwwroot/vid/" + Path.GetFileName(ViewBag.Movie.MovieFiles[0].FilePath);
             System.IO.File.Copy(moviefile, newmoviefile, true);
             System.Console.WriteLine(Path.GetFileName(ViewBag.Movie.MovieFiles[0].FilePath));
-            FileInfo fi1 = new FileInfo(Directory.GetCurrentDirectory() + "/wwwroot/vid/" + Path.GetFileName(ViewBag.Movie.MovieFiles[0].FilePath) + Path.GetExtension(ViewBag.Movie.MovieFiles[0].FilePath));
-            ViewBag.temp = "/vid/" + Path.GetFileName(ViewBag.Movie.MovieFiles[0].FilePath) + Path.GetExtension(ViewBag.Movie.MovieFiles[0].FilePath);
+            FileInfo fi1 = new FileInfo(Directory.GetCurrentDirectory() + "/wwwroot/vid/" + Path.GetFileName(ViewBag.Movie.MovieFiles[0].FilePath));
+            ViewBag.temp = "/vid/" + Path.GetFileName(ViewBag.Movie.MovieFiles[0].FilePath);
             while(IsFileLocked(fi1));
->>>>>>> da2898d142fef355eede3bd93e9df0344ba074f3
             return View();
         }
 
@@ -352,8 +348,6 @@ namespace PlexClone.Controllers{
 
         [Route("/refresh/{libraryid}")]
         public IActionResult RefreshLibrary(int libraryid){
-<<<<<<< HEAD
-=======
             var library = _context.Libraries.Include(f=>f.Files).ThenInclude(m=>m.Movie).SingleOrDefault(l => l.id == libraryid);
             List<string> allfiles = Directory.GetFiles(library.Folder, "*.*", SearchOption.AllDirectories).ToList();
             allfiles = allfiles.Where(f => moviefiletypes.Contains(Path.GetExtension(f))).ToList();
@@ -463,7 +457,6 @@ namespace PlexClone.Controllers{
                 }
             }
             _context.SaveChanges();
->>>>>>> da2898d142fef355eede3bd93e9df0344ba074f3
             return RedirectToAction("Index");
         }
 
