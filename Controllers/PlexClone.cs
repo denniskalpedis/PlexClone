@@ -83,6 +83,12 @@ namespace PlexClone.Controllers{
         public IActionResult LoadMovie(int movieid){
             ViewBag.Libraries = _context.Libraries;
             ViewBag.Movie = _context.Movies.Include(f => f.MovieFiles).SingleOrDefault(m => m.id == movieid);
+            string vidfolder = "wwwroot/vid/";
+            foreach (string path in Directory.GetFiles(vidfolder, "*.*", SearchOption.AllDirectories)){
+                System.Console.WriteLine(path);
+
+                System.IO.File.Delete(path);
+            }
             return View("Movie");
         }
 
@@ -90,14 +96,50 @@ namespace PlexClone.Controllers{
         public IActionResult PlayMovie(int movieid){
             ViewBag.Movie = _context.Movies.Include(f => f.MovieFiles).SingleOrDefault(m => m.id == movieid);
             string vidfolder = "wwwroot/vid/";
+            System.Console.WriteLine(Directory.GetFiles(vidfolder, "*.*", SearchOption.AllDirectories).Count());
+
             foreach (string path in Directory.GetFiles(vidfolder, "*.*", SearchOption.AllDirectories)){
+                System.Console.WriteLine(path);
+
                 System.IO.File.Delete(path);
             }
+            System.Console.WriteLine(Directory.GetFiles(vidfolder, "*.*", SearchOption.AllDirectories).Count());
             string moviefile = ViewBag.Movie.MovieFiles[0].FilePath;
-            string newmoviefile = Directory.GetCurrentDirectory() + "/wwwroot/vid/video" + Path.GetExtension(ViewBag.Movie.MovieFiles[0].FilePath);
+            string newmoviefile = Directory.GetCurrentDirectory() + "/wwwroot/vid/" + Path.GetFileName(ViewBag.Movie.MovieFiles[0].FilePath) + Path.GetExtension(ViewBag.Movie.MovieFiles[0].FilePath);
             System.IO.File.Copy(moviefile, newmoviefile, true);
-            ViewBag.extension = "/vid/video" + Path.GetExtension(ViewBag.Movie.MovieFiles[0].FilePath);
+            System.Console.WriteLine(Path.GetFileName(ViewBag.Movie.MovieFiles[0].FilePath));
+            FileInfo fi1 = new FileInfo(Directory.GetCurrentDirectory() + "/wwwroot/vid/" + Path.GetFileName(ViewBag.Movie.MovieFiles[0].FilePath) + Path.GetExtension(ViewBag.Movie.MovieFiles[0].FilePath));
+            ViewBag.temp = "/vid/" + Path.GetFileName(ViewBag.Movie.MovieFiles[0].FilePath) + Path.GetExtension(ViewBag.Movie.MovieFiles[0].FilePath);
+            while(IsFileLocked(fi1));
             return View();
+        }
+
+        private bool IsFileLocked(FileInfo file)
+        {
+            FileStream stream = null;
+
+            try
+            {
+                System.Console.WriteLine(file);
+                stream = file.Open(FileMode.Open, FileAccess.ReadWrite, FileShare.None);
+
+            }
+            catch (IOException)
+            {
+                //the file is unavailable because it is:
+                //still being written to
+                //or being processed by another thread
+                //or does not exist (has already been processed)
+                return true;
+            }
+            finally
+            {
+                if (stream != null)
+                    stream.Close();
+            }
+
+            //file is not locked
+            return false;
         }
 
         [HttpGet]
@@ -179,6 +221,9 @@ namespace PlexClone.Controllers{
                     hd = true;
                     quality = "720P";
                 } else if (JsonResponse["streams"][0]["width"] == 480){
+                    hd = false;
+                    quality = "480P";
+                } else{
                     hd = false;
                     quality = "480P";
                 }
