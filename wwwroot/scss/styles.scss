@@ -68,6 +68,10 @@ body{
         vertical-align: top;
         margin-top: 2px;
     }
+    p{
+        color: $blue;
+        margin-left: 15px;
+    }
 }
 .body{
     width: 78%;
@@ -125,7 +129,7 @@ body{
 .movieContainer{
     // width: 24%;
     display: inline-block;
-    height: 400px;
+    height: 380px;
     vertical-align: top;
     img{
         height: 250px;
@@ -137,4 +141,12 @@ body{
         color:$blue;
         margin-top: 15px;
     }
+}
+#singleMovieContainer{
+    width: 78%;
+    display: inline-block;
+    overflow: scroll;
+    height: 100%;
+    vertical-align: top;
+    padding: 20px 50px;
 }
