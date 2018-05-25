@@ -18,7 +18,7 @@ namespace PlexClone.Models{
 	}
 
 	public class File:BaseEntity{
-		public string Path{get;set;}
+		public string FilePath{get;set;}
 		public string CodecName{get;set;}
 		public string Resolution{get;set;}
 		public string Format{get;set;}

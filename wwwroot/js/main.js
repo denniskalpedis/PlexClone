@@ -29,7 +29,11 @@ function renderMovie(movieId){
     var item = allItems.find(item => item.id == movieId );
     $('#moviesDisplay').hide();
     $('#singleMovieContainer').html('');
+<<<<<<< HEAD
     $('#singleMovieContainer').append('<p onclick="backLink()">Go Back</p><img src="'+item.poster+'" alt=""><h3>'+item.title+'<h3><p>'+item.year+'<p>');
+=======
+    $('#singleMovieContainer').append('<p onclick="backLink()">Go Back</p><img src="'+item.poster+'" alt="'+item.title+'"><h3>'+item.title+'<h3><p>'+item.year+'<p>');
+>>>>>>> da2898d142fef355eede3bd93e9df0344ba074f3
     $('#singleMovieContainer').show();
 }
 
