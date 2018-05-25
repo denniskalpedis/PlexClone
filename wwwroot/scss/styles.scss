@@ -164,13 +164,14 @@ body{
     color: $blue;
     span{
         color: $gray;
+        margin-left: 5px;
     }
     div{
         display: inline-block;
-        width: 50%;
         vertical-align: top;
     }
     .left{
+        width: 40%;
         img{
             height: 470px;
             width: auto;
@@ -181,6 +182,7 @@ body{
         }
     }
     .right{
+        width: 50%;
         .play{
             height: 35px;
             width: auto;

@@ -29,6 +29,8 @@ namespace PlexClone.Migrations
 
                     b.Property<string>("Duration");
 
+                    b.Property<string>("FilePath");
+
                     b.Property<string>("Format");
 
                     b.Property<bool>("HD");
@@ -36,8 +38,6 @@ namespace PlexClone.Migrations
                     b.Property<int?>("Libraryid");
 
                     b.Property<int?>("Movieid");
-
-                    b.Property<string>("Path");
 
                     b.Property<string>("Quality");
 
@@ -76,7 +76,7 @@ namespace PlexClone.Migrations
                     b.ToTable("Libraries");
                 });
 
-            modelBuilder.Entity("PlexClone.Models.Movies", b =>
+            modelBuilder.Entity("PlexClone.Models.Movie", b =>
                 {
                     b.Property<int>("id")
                         .ValueGeneratedOnAdd();
@@ -116,7 +116,7 @@ namespace PlexClone.Migrations
                         .WithMany("Files")
                         .HasForeignKey("Libraryid");
 
-                    b.HasOne("PlexClone.Models.Movies", "Movie")
+                    b.HasOne("PlexClone.Models.Movie", "Movie")
                         .WithMany("MovieFiles")
                         .HasForeignKey("Movieid");
                 });

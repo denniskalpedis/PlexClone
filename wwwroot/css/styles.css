@@ -165,11 +165,14 @@ body {
 }
 #singleMovieContainer span {
   color: #111A1D;
+  margin-left: 5px;
 }
 #singleMovieContainer div {
   display: inline-block;
-  width: 50%;
   vertical-align: top;
+}
+#singleMovieContainer .left {
+  width: 40%;
 }
 #singleMovieContainer .left img {
   height: 470px;
@@ -180,6 +183,7 @@ body {
   margin-top: 20px;
 }
 #singleMovieContainer .right {
+  width: 50%;
   margin-top: 50px;
 }
 #singleMovieContainer .right .play {

@@ -80,7 +80,7 @@ namespace PlexClone.Controllers{
 
         [HttpGet]
         [Route("library/{libraryId}")]
-        public JsonResult AllItems(int libraryId)
+        public JsonResult Library(int libraryId)
         {
             List<PlexClone.Models.File> files = _context.Files.Include(f => f.Movie).Where(f => f.Library.id == libraryId).ToList();
             List<object> libraryMovies = new List<object>();
@@ -93,6 +93,24 @@ namespace PlexClone.Controllers{
                 });
             }
             return  Json(libraryMovies);
+        }
+
+        [HttpGet]
+        [Route("delete/{libraryId}")]
+        public JsonResult deleteLibrary(int libraryId)
+        {
+            Libraries library = _context.Libraries.Include(i=>i.Files).ThenInclude(i=>i.Movie).SingleOrDefault(l => l.id == libraryId);
+            foreach(var lfile in library.Files){
+                var delmovie = lfile.Movie;
+                _context.Files.Remove(lfile);
+                _context.Movies.Remove(delmovie);
+                
+            }
+                
+            
+            _context.Libraries.Remove(library);
+            _context.SaveChanges();
+            return  Json(new {error = "false"});
         }
     }
 }
