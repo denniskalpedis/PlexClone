@@ -7,12 +7,20 @@
         @version.CodecName<br>
         @version.Duration<br>
     }
+    @if (@ViewBag.Movie.MovieFiles[0].CodecName == "h264")
+    {
     <a href="/play/@ViewBag.Movie.id">
         <div class="d-inline-block">
             <img src="@ViewBag.Movie.Poster" alt="@ViewBag.Movie.Title"> <br>
-
         </div>
     </a>
+    } else 
+    {
+        <div class="d-inline-block">
+            <img src="@ViewBag.Movie.Poster" alt="@ViewBag.Movie.Title"> <br>
+        </div>
+    }
+
         <div>
             @ViewBag.Movie.Title<br>
             @ViewBag.Movie.Year<br>
