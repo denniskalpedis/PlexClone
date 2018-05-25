@@ -64,6 +64,10 @@ body {
   vertical-align: top;
   margin-top: 2px;
 }
+.leftNav p {
+  color: #95B8d1;
+  margin-left: 15px;
+}
 
 .body {
   width: 78%;
@@ -125,7 +129,7 @@ body {
 
 .movieContainer {
   display: inline-block;
-  height: 400px;
+  height: 380px;
   vertical-align: top;
 }
 .movieContainer img {
@@ -139,12 +143,13 @@ body {
   margin-top: 15px;
 }
 
-.poster {
-  height: 215px;
-}
-
-.movie {
-  width: 160px;
+#singleMovieContainer {
+  width: 78%;
+  display: inline-block;
+  overflow: scroll;
+  height: 100%;
+  vertical-align: top;
+  padding: 20px 50px;
 }
 
 /*# sourceMappingURL=wwwroot/css/styles.css.map */
