@@ -262,7 +262,7 @@ namespace PlexClone.Controllers{
 
 
                     PlexClone.Models.File nfile = new PlexClone.Models.File{
-                        Path = file,
+                        FilePath = file,
                         Library= model,
                         Movie = nmovie,
                         CodecName = JsonResponse["streams"][0]["codec_name"],
@@ -277,7 +277,7 @@ namespace PlexClone.Controllers{
                     //search API "http://www.omdbapi.com/?t=temp.Substring(0,idx)&y=temp.Substring(idx+3)&plot=full&apikey=" + apikey
                 } else {
                     PlexClone.Models.File nfile = new PlexClone.Models.File{
-                        Path = file,
+                        FilePath = file,
                         Library= model,
                         CodecName = JsonResponse["streams"][0]["codec_name"],
                         Resolution = JsonResponse["streams"][0]["width"] + "x" + JsonResponse["streams"][0]["height"],
@@ -296,6 +296,115 @@ namespace PlexClone.Controllers{
 
         [Route("/refresh/{libraryid}")]
         public IActionResult RefreshLibrary(int libraryid){
+            var library = _context.Libraries.Include(f=>f.Files).ThenInclude(m=>m.Movie).SingleOrDefault(l => l.id == libraryid);
+            List<string> allfiles = Directory.GetFiles(library.Folder, "*.*", SearchOption.AllDirectories).ToList();
+            allfiles = allfiles.Where(f => moviefiletypes.Contains(Path.GetExtension(f))).ToList();
+            foreach(string f in allfiles){
+                if(!library.Files.Any(p => p.FilePath == f)){
+                    string info = GetVideoInfo(f);
+                    dynamic JsonResponse = JsonConvert.DeserializeObject<dynamic>(info);
+                    bool hd = true;
+                    string quality = "";
+                    if (JsonResponse["streams"][0]["width"] == 1920){
+                        hd = true;
+                        quality = "1080P";
+                    } else if (JsonResponse["streams"][0]["width"] == 1280){
+                        hd = true;
+                        quality = "720P";
+                    } else if (JsonResponse["streams"][0]["width"] == 480){
+                        hd = false;
+                        quality = "480P";
+                    }
+                    TimeSpan t = new TimeSpan();
+                    if(JsonResponse["streams"][0]["duration"] != null){
+                        t = TimeSpan.FromSeconds((double)JsonResponse["streams"][0]["duration"]);
+                    }else{
+                        t = TimeSpan.FromSeconds((double)JsonResponse["format"]["duration"]);
+                    }
+                    string time = t.ToString(@"hh\:mm\:ss");
+                    FileInfo finfo = new FileInfo(f);
+                    string temp = finfo.Directory.Name;
+                    int idx = temp.LastIndexOf(" - ");
+                    if(idx != -1){
+                        var MovieInfo = new Dictionary<string, object>();
+                        OMDBapiCall(temp.Substring(0, idx), temp.Substring(idx+3), _configuration["apikey"], ApiResponse => { MovieInfo = ApiResponse; } ).Wait();
+                        string rtr = null;
+                        string imdbr = null;
+                        Movie nmovie = new Movie();
+                        if((dynamic)MovieInfo.ContainsKey("Error") && (dynamic)MovieInfo["Error"] == "Movie not found!"){
+                            nmovie = new Movie{
+                                Title = Path.GetFileNameWithoutExtension(temp),
+                                Year = null,
+                                Runtime = null,
+                                Poster = "/Img/unknown.jpg",
+                                Plot = null,
+                                Rating = null,
+                                Actors = null,
+                                genre = null,
+                                RottenTomatoesRating = null,
+                                IMDBRating = null
+                            }; 
+                        }else{
+                            foreach(var item in (dynamic)MovieInfo["Ratings"]){
+                                if(item["Source"] == "Rotten Tomatoes"){
+                                    rtr = (string)item["Value"];
+                                } else if(item["Source"] == "Internet Movie Database"){
+                                    imdbr = (string)item["Value"];
+                                }
+                            }
+                            if(rtr == null){
+                                rtr = "N/A";
+                            }
+                            if(imdbr == null){
+                                imdbr = "N/A";
+                            }
+                            nmovie = new Movie{
+                                Title = (string)MovieInfo["Title"],
+                                Year = (string)MovieInfo["Year"],
+                                Runtime = (string)MovieInfo["Runtime"],
+                                Poster = (string)MovieInfo["Poster"],
+                                Plot = (string)MovieInfo["Plot"],
+                                Rating = (string)MovieInfo["Rated"],
+                                Actors = (string)MovieInfo["Actors"],
+                                genre = (string)MovieInfo["Genre"],
+                                RottenTomatoesRating = rtr,
+                                IMDBRating = imdbr
+                            };
+                            if(nmovie.Poster == "N/A"){
+                                nmovie.Poster = "/Img/unknown.jpg";
+                            }
+                        }
+                        if (_context.Movies.Any(m => m.Title == nmovie.Title) && _context.Movies.Any(m => m.Year == nmovie.Year)){
+                            nmovie = _context.Movies.SingleOrDefault(m => m.Title == nmovie.Title && m.Year == nmovie.Year);
+                        }else {
+                            _context.Movies.Add(nmovie);
+                            _context.SaveChanges();
+                        }
+                        PlexClone.Models.File nfile = new PlexClone.Models.File{
+                            FilePath = f,
+                            Library= library,
+                            Movie = nmovie,
+                            CodecName = JsonResponse["streams"][0]["codec_name"],
+                            Resolution = JsonResponse["streams"][0]["width"] + "x" + JsonResponse["streams"][0]["height"],
+                            Format = JsonResponse["format"]["format_long_name"],
+                            Duration = time,
+                            Quality = quality,
+                            HD = hd
+                        };
+                        _context.Files.Add(nfile);
+                        _context.SaveChanges();
+                    }
+                }
+            }
+            foreach(var f in library.Files){
+                if(!allfiles.Any(m => m == f.FilePath)){
+                    Movie nomoremovie = _context.Movies.SingleOrDefault(m => m== (Movie)f.Movie);
+                    _context.Remove(nomoremovie);
+                    _context.Remove(f);
+                    // _context.SaveChanges();
+                }
+            }
+            _context.SaveChanges();
             return RedirectToAction("Index");
         }
 
