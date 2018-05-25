@@ -457,7 +457,7 @@ namespace PlexClone.Controllers{
                 }
             }
             _context.SaveChanges();
-            return RedirectToAction("Index");
+            return RedirectToAction("Library", "JSON", new{libraryId= libraryid});
         }
 
         // public async static Task<Movies> OMDBapiCall(string movie, string year, string api)
