@@ -294,6 +294,11 @@ namespace PlexClone.Controllers{
             return RedirectToAction("Index");
         }
 
+        [Route("/refresh/{libraryid}")]
+        public IActionResult RefreshLibrary(int libraryid){
+            return RedirectToAction("Index");
+        }
+
         // public async static Task<Movies> OMDBapiCall(string movie, string year, string api)
         // {
         //     try
