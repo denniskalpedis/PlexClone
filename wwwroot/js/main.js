@@ -29,7 +29,13 @@ function renderMovie(movieId){
     var item = allItems.find(item => item.id == movieId );
     $('#moviesDisplay').hide();
     $('#singleMovieContainer').html('');
-    $('#singleMovieContainer').append('<div class="left"><p class="hover goBack" onclick="backLink()">< Back</p><img src="'+item.poster+'" alt=""/><h3>'+item.title+'</h3><p>'+item.year+'</p></div><div class="right"><p><span>'+item.plot+'</span></p><p> Actors: <span>'+item.actors+'</span></p><p> Genre: <span>'+item.genre+'</span></p><p>File Runtime: <span>'+ item.duration +'</span><a href="/play/'+item.id+'"><img class="play" src="Img/play.png"></a></p><p> Movie Length: <span>'+item.runtime+'</span></p><p>Movie Quality: <span>'+item.mulitple+'</span></p><p><img class="rotten"src="/Img/rotten-tomatoes.png" alt="rotten tomaotes icon."/> <span>'+item.rottentomatoesrating+'</span></p><p><img class="rotten"src="/Img/imdb.png" alt="imdb icon."/> <span>'+item.imdbrating+'</span></p></div>');
+    var play;
+    if(item.isplayable){
+        play = '<a href="/play/'+item.id+'"><img class="play" src="Img/play.png"></a>'
+    }else{
+        play = ''
+    }
+    $('#singleMovieContainer').append('<div class="left"><p class="hover goBack" onclick="backLink()">< Back</p><img src="'+item.poster+'" alt=""/><h3>'+item.title+'</h3><p>'+item.year+'</p></div><div class="right"><p><span>'+item.plot+'</span></p><p> Actors: <span>'+item.actors+'</span></p><p> Genre: <span>'+item.genre+'</span></p><p>File Runtime: <span>'+ item.duration +'</span>'+play+'</p><p> Movie Length: <span>'+item.runtime+'</span></p><p>Movie Quality: <span>'+item.mulitple+'</span></p><p><img class="rotten"src="/Img/rotten-tomatoes.png" alt="rotten tomaotes icon."/> <span>'+item.rottentomatoesrating+'</span></p><p><img class="rotten"src="/Img/imdb.png" alt="imdb icon."/> <span>'+item.imdbrating+'</span></p></div>');
     $('#singleMovieContainer').show();
 }
 
