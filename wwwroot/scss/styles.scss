@@ -57,9 +57,10 @@ body{
     height: 100%;
     vertical-align: top;
     color: $blue;
-    h5{
+    h4{
         display: inline-block;
         margin-right: 5px;
+        color: $gray;
     }
     img{
         width: 20px;
@@ -71,6 +72,17 @@ body{
     p{
         color: $blue;
         margin-left: 15px;
+    }
+    .refresh{
+        margin-left: 10px;
+        height: 20px;
+        width: auto;
+        margin-right: 5px;
+    
+    }
+    .delete{
+        height: 20px;
+        width: auto; 
     }
 }
 .body{
@@ -131,6 +143,7 @@ body{
     display: inline-block;
     height: 380px;
     vertical-align: top;
+    color:$blue;
     img{
         height: 250px;
         width: auto;
@@ -138,7 +151,6 @@ body{
     }
     h3{
         font-size: 18px;
-        color:$blue;
         margin-top: 15px;
     }
 }
@@ -149,4 +161,47 @@ body{
     height: 100%;
     vertical-align: top;
     padding: 20px 50px;
+    color: $blue;
+    span{
+        color: $gray;
+    }
+    div{
+        display: inline-block;
+        width: 50%;
+        vertical-align: top;
+    }
+    .left{
+        img{
+            height: 470px;
+            width: auto;
+        }
+        h3{
+            font-size: 30px;
+            margin-top: 20px;
+        }
+    }
+    .right{
+        .play{
+            height: 35px;
+            width: auto;
+            display: inline-block;
+        }
+        .rotten{
+            height: 35px;
+            width: auto;
+            display: inline-block;
+        }
+        margin-top: 50px;
+    }
+}
+.hover:hover{
+    color: white;
+    cursor: pointer;
+    h3{
+        color: white; 
+    }
+}
+.goBack{
+    font-size: 25px;
+    color: $blue; 
 }
