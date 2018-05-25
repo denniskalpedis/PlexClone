@@ -28,6 +28,7 @@
         @if(@ViewBag.Libraries != null){
             @foreach(var library in @ViewBag.Libraries){
                 <p onclick="renderLibrary(@library.id)">@library.Name</p>
+                <br><a href="/@library.id">@library.Name</a><a href="/refresh/@library.id"><img src="~/Img/refresh.png" alt="refresh"></a><a href="/dellibrary/@library.id"><img src="~/Img/delete.png" alt="trash"></a>
             }
         }
         </div>
