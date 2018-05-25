@@ -89,7 +89,14 @@ namespace PlexClone.Controllers{
         [Route("/play/{movieid}")]
         public IActionResult PlayMovie(int movieid){
             ViewBag.Movie = _context.Movies.Include(f => f.MovieFiles).SingleOrDefault(m => m.id == movieid);
-            System.Console.WriteLine(ViewBag.Movie.MovieFiles[0].Path);
+            string vidfolder = "wwwroot/vid/";
+            foreach (string path in Directory.GetFiles(vidfolder, "*.*", SearchOption.AllDirectories)){
+                System.IO.File.Delete(path);
+            }
+            string moviefile = ViewBag.Movie.MovieFiles[0].FilePath;
+            string newmoviefile = Directory.GetCurrentDirectory() + "/wwwroot/vid/video" + Path.GetExtension(ViewBag.Movie.MovieFiles[0].FilePath);
+            System.IO.File.Copy(moviefile, newmoviefile, true);
+            ViewBag.extension = "/vid/video" + Path.GetExtension(ViewBag.Movie.MovieFiles[0].FilePath);
             return View();
         }
 
