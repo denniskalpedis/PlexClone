@@ -27,8 +27,7 @@
         <img id="addLibraryButton" class="hover" src="~/Img/plus.png" alt="Plus sign.">
         @if(@ViewBag.Libraries != null){
             @foreach(var library in @ViewBag.Libraries){
-                <p class="library hover" onclick="renderLibrary(@library.id)">@library.Name <img class="refresh" src="~/Img/refresh.png" alt="refresh"><img class="delete" src="~/Img/delete.png" alt="trash"></p>
-                <!-- <br><a href="/@library.id">@library.Name</a><a href="/refresh/@library.id"><</a><a href="/dellibrary/@library.id"><img src="~/Img/delete.png" alt="trash"></a> -->
+                <p class="library hover" onclick="renderLibrary(@library.id)">@library.Name <img class="refresh" onclick="refreshLibrary(@library.id)"src="~/Img/refresh.png" alt="refresh"><img onclick="deleteLibrary(@library.id, event)" class="delete" src="~/Img/delete.png" alt="trash"></p>
             }
         }
         </div>
