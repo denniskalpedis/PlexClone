@@ -105,9 +105,9 @@ $(document).ready(function(){
     $('#addLibraryButton').on('click', function(){
         $('#formPopup').show();
     });
-    $('#closeForm').on('click', function(){
-        $('#formPopup').hide();
-    });
+    // $('#closeForm').on('click', function(){
+    //     $('#formPopup').hide();
+    // });
     $('.refresh').hide();
     $('.delete').hide();
 
@@ -135,3 +135,18 @@ $(document).ready(function(){
     });
     
 }); 
+
+$(document).mouseup(function(e) 
+{
+    var container = $("#formPopup");
+
+    // if the target of the click isn't the container nor a descendant of the container
+    if (container.is(':visible'))
+    {
+        if (!$(".libraryForm").is(e.target) && $(".libraryForm").has(e.target).length === 0) 
+        {
+            container.hide();
+        }
+    }
+
+});

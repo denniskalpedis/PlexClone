@@ -31,7 +31,7 @@ namespace PlexClone.Controllers{
         [Route("allitems")]
         public JsonResult AllItems()
         {
-            List<Movie> All = _context.Movies.Include(f => f.MovieFiles).ToList();
+            List<Movie> All = _context.Movies.Include(f => f.MovieFiles).OrderBy(f => f.Title).ToList();
             List<object> Movies = new List<object>();
             
 
@@ -82,15 +82,20 @@ namespace PlexClone.Controllers{
         [Route("library/{libraryId}")]
         public JsonResult Library(int libraryId)
         {
-            List<PlexClone.Models.File> files = _context.Files.Include(f => f.Movie).Where(f => f.Library.id == libraryId).ToList();
-            List<object> libraryMovies = new List<object>();
+            List<PlexClone.Models.File> files = _context.Files.Include(f => f.Movie).OrderBy(f => f.Movie.Title).Where(f => f.Library.id == libraryId).ToList();
+
+            // List<PlexClone.Models.Libraries> files = _context.Libraries.Include(m => m.Files).ThenInclude(m => m.Movie).SingleOrDefault(i => i.id == libraryId).ToList();
+            List<LibraryMovieViewModel> libraryMovies = new List<LibraryMovieViewModel>();
             foreach(var item in files){
-                 libraryMovies.Add(new {
-                    title = item.Movie.Title,
-                    poster = item.Movie.Poster,
-                    id = item.Movie.id,
-                    year = item.Movie.Year
-                });
+                LibraryMovieViewModel newMovie = new LibraryMovieViewModel();
+                if(!libraryMovies.Any(f => f.title == item.Movie.Title)){
+                    newMovie.title = item.Movie.Title;
+                    newMovie.poster = item.Movie.Poster;
+                    newMovie.id = item.Movie.id;
+                    newMovie.year = item.Movie.Year;
+                    libraryMovies.Add(newMovie);
+                }
+
             }
             return  Json(libraryMovies);
         }
@@ -103,7 +108,10 @@ namespace PlexClone.Controllers{
             foreach(var lfile in library.Files){
                 var delmovie = lfile.Movie;
                 _context.Files.Remove(lfile);
-                _context.Movies.Remove(delmovie);
+                if(delmovie.MovieFiles.Count == 1){
+                    _context.Movies.Remove(delmovie);
+                }
+                
                 
             }
                 

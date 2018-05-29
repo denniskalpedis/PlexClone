@@ -46,7 +46,7 @@ namespace PlexClone.Controllers{
         public IActionResult Index(){
             ViewBag.drives = allDrives;
             ViewBag.Libraries = _context.Libraries;
-            ViewBag.Movies = _context.Movies.Include(f => f.MovieFiles);
+            ViewBag.Movies = _context.Movies.Include(f => f.MovieFiles).OrderBy(f => f.Title);
             return View("Index");
         }
 
@@ -363,7 +363,7 @@ namespace PlexClone.Controllers{
                     } else if (JsonResponse["streams"][0]["width"] == 1280){
                         hd = true;
                         quality = "720P";
-                    } else if (JsonResponse["streams"][0]["width"] == 480){
+                    } else {
                         hd = false;
                         quality = "480P";
                     }
@@ -451,7 +451,9 @@ namespace PlexClone.Controllers{
             foreach(var f in library.Files){
                 if(!allfiles.Any(m => m == f.FilePath)){
                     Movie nomoremovie = _context.Movies.SingleOrDefault(m => m== (Movie)f.Movie);
-                    _context.Remove(nomoremovie);
+                    if(nomoremovie.MovieFiles.Count == 1){
+                        _context.Remove(nomoremovie);
+                    }
                     _context.Remove(f);
                     // _context.SaveChanges();
                 }
