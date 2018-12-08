@@ -1,4 +1,5 @@
 var allItems;
+var timeout = null;
 
 function toDom(arr){
     $('#moviesDisplay').html('');
@@ -127,11 +128,22 @@ $(document).ready(function(){
       }).then(data => allItems = data);
 
     $('#search').on('keyup', function(){
-    var string = $(this).val().toLowerCase();
-    console.log(string);
-    var filtered = allItems.filter(item => item.title.toLowerCase().includes(string) || item.genre.toLowerCase().includes(string));
-    console.log(filtered);
-    bounce(filtered);
+        clearTimeout(timeout);
+        var string = $(this).val().toLowerCase();
+        timeout = setTimeout(function(){
+            console.log(allItems.length);
+            for( let i = 0; i < allItems.length; i++){
+                console.log(allItems[i].title.toLowerCase().includes(string));
+                if(allItems[i].genre) {
+                    console.log(allItems[i].genre.toLowerCase().includes(string));
+                }
+            }
+
+            var filtered = allItems.filter(item => ((item.title) ? item.title.toLowerCase().includes(string) : false) || ((item.genre) ? item.genre.toLowerCase().includes(string) : false));
+            console.log(filtered);
+            bounce(filtered);
+        }, 500);
+        
     });
     
 }); 
