@@ -9,7 +9,7 @@ appsettings.production.json
 appsettings.development.json
 
 # Ignore possible video files
-vid/*
+wwwroot/vid/*
 
 # User-specific files
 *.suo
