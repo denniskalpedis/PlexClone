@@ -1,0 +1,17 @@
+{
+    "Logging": {
+        "IncludeScopes": false,
+        "LogLevel": {
+            "Default": "Warning"
+        }
+    },
+
+"DBInfo":
+{
+    "Name": "MySQLconnect",
+    "ConnectionString": "server=<ip>;userid=<id>;password=<password>;port=<port>;database=<name>;SslMode=<SSL?>"
+},
+
+
+"apikey":"OMDB-API-KEY"
+}
