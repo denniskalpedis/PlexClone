@@ -4,15 +4,7 @@ This Projects goal is to clone Plex and give certain simlar functionality. This 
 
 ## Getting Started
 
-These instructions will get you a copy of the project up and running on your local machine for development and testing purposes. See deployment for notes on how to deploy the project on a live system.
-
-### Prerequisites
-
-What things you need to install the software and how to install them
-
-```
-Give examples
-```
+These instructions will get you a copy of the project up and running on your local machine for development and testing purposes.
 
 ### Installing
 
@@ -40,15 +32,6 @@ dotnet build
 download ffmpeg from https://ffmpeg.zeranoe.com/builds/
 
 extract and put the files in the /bin/ folder into the bin folder in the app.
-
-```
-Mac/Linux:
-mv appsettings appsettings.json
-
-Windows:
-ren appsettings appsettings.json
-
-```
 
 change settings inside 'appsettings.js'
 
