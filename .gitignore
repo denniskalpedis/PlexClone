@@ -11,6 +11,9 @@ appsettings.development.json
 # Ignore possible video files
 wwwroot/vid/*
 
+# Leave vid folder
+!wwwroot/vid/.gitkeep
+
 # User-specific files
 *.suo
 *.user
