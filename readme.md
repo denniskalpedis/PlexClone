@@ -29,11 +29,15 @@ dotnet restore
 
 dotnet build
 
+dotnet ef migrations add initial
+
+dotnet ef database update
+
 download ffmpeg from https://ffmpeg.zeranoe.com/builds/
 
-extract and put the files in the /bin/ folder into the bin folder in the app.
+extract and put the files from the /bin/ folder into the bin folder inside the PlexClone app.
 
-change settings inside 'appsettings.js'
+change settings inside 'appsettings.json'
 
 dotnet run
 
