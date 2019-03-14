@@ -20,6 +20,7 @@ wwwroot/vid/*
 *.sln.docstates
 
 # Build results
+[Mm]igrations/
 [Dd]ebug/
 [Rr]elease/
 x64/
